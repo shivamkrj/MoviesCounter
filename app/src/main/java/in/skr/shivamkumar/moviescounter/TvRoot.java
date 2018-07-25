@@ -9,7 +9,7 @@ public class TvRoot {
 
     @Expose
     private Long page;
-    @Expose
+    @SerializedName("results")
     private List<TvResult> tvResults;
     @SerializedName("total_pages")
     private Long totalPages;

@@ -18,12 +18,16 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
 
     Context context;
     ViewItemClickListener listener;
-    ArrayList<UpcomingResult> items;
+    ArrayList<UpcomingResult> itemsMovies;
+    ArrayList<TvResult> itemsTv;
+    int type;
 
-    public AdapterSquareView(Context context, ArrayList<UpcomingResult> items, ViewItemClickListener listener) {
+    public AdapterSquareView(Context context,int type, ArrayList<UpcomingResult> itemsMovies,ArrayList<TvResult> itemsTv , ViewItemClickListener listener) {
         this.context = context;
         this.listener = listener;
-        this.items = items;
+        this.itemsMovies = itemsMovies;
+        this.itemsTv = itemsTv;
+        this.type = type;
     }
 
     @NonNull
@@ -36,12 +40,19 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderSquare viewHolder, int i) {
-        UpcomingResult item = items.get(i);
-        viewHolder.movieNameTextView.setText(item.getTitle());
-
-        String imgUrl = "https://image.tmdb.org/t/p/w500" + item.getPosterPath();
-        ImageView imageView = viewHolder.imageView;
-        Picasso.get().load(imgUrl).fit().into(imageView);
+        if(type==1){//Movie
+            UpcomingResult item = itemsMovies.get(i);
+            viewHolder.movieNameTextView.setText(item.getTitle());
+            String imgUrl = "https://image.tmdb.org/t/p/w500" + item.getPosterPath();
+            ImageView imageView = viewHolder.imageView;
+            Picasso.get().load(imgUrl).fit().into(imageView);
+        }else if(type==2){//Tv
+            TvResult item = itemsTv.get(i);
+            viewHolder.movieNameTextView.setText(item.getName());
+            String imgUrl = "https://image.tmdb.org/t/p/w500" + item.getPosterPath();
+            ImageView imageView = viewHolder.imageView;
+            Picasso.get().load(imgUrl).fit().into(imageView);
+        }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +72,9 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
 
     @Override
     public int getItemCount() {
-        return items.size();
+        if (type==1)
+            return itemsMovies.size();
+        else
+            return itemsTv.size();
     }
 }

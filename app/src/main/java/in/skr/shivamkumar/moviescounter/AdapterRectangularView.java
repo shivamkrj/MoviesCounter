@@ -19,13 +19,18 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
 
     Context context;
     ViewItemClickListener listener;
-    ArrayList<UpcomingResult> items;
+    ArrayList<UpcomingResult> itemsMovies;
+    ArrayList<TvResult> itemsTv;
+    int type;
 
-    public AdapterRectangularView(Context context, ArrayList<UpcomingResult> items, ViewItemClickListener listener) {
+    public AdapterRectangularView(Context context, int type, ArrayList<UpcomingResult> itemsMovies,ArrayList<TvResult> itemsTv, ViewItemClickListener listener) {
         this.context = context;
         this.listener = listener;
-        this.items = items;
+        this.itemsMovies = itemsMovies;
+        this.itemsTv = itemsTv;
+        this.type = type;
     }
+
 
     @NonNull
     @Override
@@ -37,19 +42,29 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderRectangular viewHolder, int i) {
-        UpcomingResult item = items.get(i);
-        viewHolder.movieNameTextView.setText(item.getTitle());
-        viewHolder.ratingTextView.setText(item.getVoteAverage()+"");
-        TextView genre =viewHolder.genreTextView;
-        List<Long> genreList = item.getGenreIds();
+        if(type==1){//Movies
+            UpcomingResult item = itemsMovies.get(i);
+            viewHolder.movieNameTextView.setText(item.getTitle());
+            viewHolder.ratingTextView.setText(item.getVoteAverage()+"");
+            TextView genre =viewHolder.genreTextView;
+            List<Long> genreList = item.getGenreIds();
 //
 //        for(int j =0 ; j < genreList.size();j++){
 //            genre.setText(" "+genreList.get(j)+", ");
 //        }
-        String imgUrl = "https://image.tmdb.org/t/p/original"+item.getBackdropPath();
-       // Log.d("onresponse",item.getPosterPath()+" title");
-        ImageView imageView = viewHolder.imageView;
-        Picasso.get().load(imgUrl).resize(320,200).into(imageView);
+            String imgUrl = "https://image.tmdb.org/t/p/w780"+item.getBackdropPath();
+            // Log.d("onresponse",item.getPosterPath()+" title");
+            ImageView imageView = viewHolder.imageView;
+            Picasso.get().load(imgUrl).resize(320,200).into(imageView);
+        }else if(type==2){//Tv
+            TvResult item = itemsTv.get(i);
+            viewHolder.movieNameTextView.setText(item.getName());
+            viewHolder.ratingTextView.setText(item.getVoteAverage()+"");
+            String imgUrl = "https://image.tmdb.org/t/p/w780"+item.getBackdropPath();
+            ImageView imageView = viewHolder.imageView;
+            Picasso.get().load(imgUrl).resize(320,200).into(imageView);
+        }
+
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +82,9 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
 
     @Override
     public int getItemCount() {
-        return items.size();
+        if(type==1){
+            return itemsMovies.size();
+        }else
+            return itemsTv.size();
     }
 }

@@ -9,11 +9,16 @@
     tools:showIn="@layout/app_bar_main">
 
 
-    <fragment
-        android:id="@+id/fragment"
-        android:name="in.skr.shivamkumar.moviescounter.MoviesFragment"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="143dp"
-        tools:layout_editor_absoluteY="217dp" />
+        android:id="@+id/container">
+        <!--<fragment-->
+            <!--android:id="@+id/fragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--tools:layout_editor_absoluteX="143dp"-->
+            <!--tools:layout_editor_absoluteY="217dp" />-->
+    </FrameLayout>
+
 </android.support.v4.widget.NestedScrollView>

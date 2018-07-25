@@ -1,10 +1,13 @@
 package in.skr.shivamkumar.moviescounter;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener, TvFragment.OnFragmentInteractionListener {
+
+    private final int MOVIE_TYPE = 1;
+    private final int TV_TYPE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,15 +30,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -42,6 +39,11 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //checking which fragment to open by default
+        //else
+        openFragment(MOVIE_TYPE);
+
     }
 
     @Override
@@ -63,12 +65,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this,ViewAllActivity.class);
             intent.putExtra("url","popular");
@@ -88,10 +85,10 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_movies) {
+            openFragment(MOVIE_TYPE);
+        } else if (id == R.id.nav_tv) {
+            openFragment(TV_TYPE);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -103,6 +100,20 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public void openFragment(int type){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if(type==MOVIE_TYPE){
+            MoviesFragment tvFragment =MoviesFragment.newInstance(null,null);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container,tvFragment);
+            fragmentTransaction.commit();
+        }else if(type==TV_TYPE){
+            TvFragment tvFragment =TvFragment.newInstance(null,null);
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container,tvFragment);
+            fragmentTransaction.commit();
+        }
     }
 
     @Override

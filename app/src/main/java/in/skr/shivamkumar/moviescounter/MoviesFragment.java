@@ -74,7 +74,6 @@ public class MoviesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -93,7 +92,7 @@ public class MoviesFragment extends Fragment {
 
     private void loadNowShowingMovies() {
         nowShowingItems = new ArrayList<>();
-        nowShowingAdapter = new AdapterRectangularView(getContext(),nowShowingItems, new ViewItemClickListener() {
+        nowShowingAdapter = new AdapterRectangularView(getContext(),1,nowShowingItems,null, new ViewItemClickListener() {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
@@ -123,7 +122,7 @@ public class MoviesFragment extends Fragment {
 
     private void loadPopularMovies() {
         popularItems = new ArrayList<>();
-        popularAdapter = new AdapterSquareView(getContext(),popularItems, new ViewItemClickListener() {
+        popularAdapter = new AdapterSquareView(getContext(),1,popularItems,null, new ViewItemClickListener() {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
@@ -153,7 +152,7 @@ public class MoviesFragment extends Fragment {
 
     private void loadTopRatedMovies() {
         topRatedItems = new ArrayList<>();
-        squareAdapter = new AdapterSquareView(getContext(),topRatedItems, new ViewItemClickListener() {
+        squareAdapter = new AdapterSquareView(getContext(),1,topRatedItems,null, new ViewItemClickListener() {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
@@ -185,7 +184,7 @@ public class MoviesFragment extends Fragment {
 
     private void loadUpcomingMovies() {
         upcomingItems = new ArrayList<>();
-        rectangularAdapter = new AdapterRectangularView(getContext(),upcomingItems, new ViewItemClickListener() {
+        rectangularAdapter = new AdapterRectangularView(getContext(),1,upcomingItems,null, new ViewItemClickListener() {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details

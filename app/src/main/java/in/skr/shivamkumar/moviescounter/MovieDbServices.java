@@ -19,4 +19,17 @@ public interface MovieDbServices {
     @GET("movie/now_playing")
     Call<UpcomingRoot> getNowShowing(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
 
+    @GET("tv/on_the_air")
+    Call<TvRoot> getOnTheAirTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+
+    @GET("tv/popular")
+    Call<TvRoot> getPopularTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+
+    @GET("tv/airing_today")
+    Call<TvRoot> getAiringTodayTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+
+    @GET("tv/top_rated")
+    Call<TvRoot> getTopRatedTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+
+
 }
