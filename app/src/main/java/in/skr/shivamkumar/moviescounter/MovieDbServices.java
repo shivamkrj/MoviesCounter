@@ -2,22 +2,22 @@ package in.skr.shivamkumar.moviescounter;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Url;
 
 public interface MovieDbServices {
 
     @GET("movie/upcoming")
-    Call<UpcomingRoot> getUpcomingMovies(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+    Call<MoviesRoot> getUpcomingMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/top_rated")
-    Call<UpcomingRoot> getTopRatedMovies(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+    Call<MoviesRoot> getTopRatedMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/popular")
-    Call<UpcomingRoot> getPopularMovies(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+    Call<MoviesRoot> getPopularMovies(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("movie/now_playing")
-    Call<UpcomingRoot> getNowShowing(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
+    Call<MoviesRoot> getNowShowing(@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
     @GET("tv/on_the_air")
     Call<TvRoot> getOnTheAirTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
@@ -31,5 +31,10 @@ public interface MovieDbServices {
     @GET("tv/top_rated")
     Call<TvRoot> getTopRatedTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
 
+    @GET("movie/{id}")
+    Call<TvRoot> getMovieDetails(@Path("id") long id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+
+    @GET("tb/{id}")
+    Call<TvRoot> getTvDetails(@Path("id") long id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
 }

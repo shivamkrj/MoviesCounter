@@ -3,7 +3,6 @@ package in.skr.shivamkumar.moviescounter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +18,11 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
 
     Context context;
     ViewItemClickListener listener;
-    ArrayList<UpcomingResult> itemsMovies;
+    ArrayList<MoviesResult> itemsMovies;
     ArrayList<TvResult> itemsTv;
     int type;
 
-    public AdapterRectangularView(Context context, int type, ArrayList<UpcomingResult> itemsMovies,ArrayList<TvResult> itemsTv, ViewItemClickListener listener) {
+    public AdapterRectangularView(Context context, int type, ArrayList<MoviesResult> itemsMovies, ArrayList<TvResult> itemsTv, ViewItemClickListener listener) {
         this.context = context;
         this.listener = listener;
         this.itemsMovies = itemsMovies;
@@ -43,7 +42,7 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderRectangular viewHolder, int i) {
         if(type==1){//Movies
-            UpcomingResult item = itemsMovies.get(i);
+            MoviesResult item = itemsMovies.get(i);
             viewHolder.movieNameTextView.setText(item.getTitle());
             viewHolder.ratingTextView.setText(item.getVoteAverage()+"");
             TextView genre =viewHolder.genreTextView;

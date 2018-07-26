@@ -7,22 +7,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
 
     Context context;
     ViewItemClickListener listener;
-    ArrayList<UpcomingResult> itemsMovies;
+    ArrayList<MoviesResult> itemsMovies;
     ArrayList<TvResult> itemsTv;
     int type;
 
-    public AdapterSquareView(Context context,int type, ArrayList<UpcomingResult> itemsMovies,ArrayList<TvResult> itemsTv , ViewItemClickListener listener) {
+    public AdapterSquareView(Context context, int type, ArrayList<MoviesResult> itemsMovies, ArrayList<TvResult> itemsTv , ViewItemClickListener listener) {
         this.context = context;
         this.listener = listener;
         this.itemsMovies = itemsMovies;
@@ -41,7 +39,7 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderSquare viewHolder, int i) {
         if(type==1){//Movie
-            UpcomingResult item = itemsMovies.get(i);
+            MoviesResult item = itemsMovies.get(i);
             viewHolder.movieNameTextView.setText(item.getTitle());
             String imgUrl = "https://image.tmdb.org/t/p/w500" + item.getPosterPath();
             ImageView imageView = viewHolder.imageView;

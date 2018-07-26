@@ -101,7 +101,7 @@ public class TvFragment extends Fragment {
 
             @Override
             public void onFailure(Call<TvRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -134,7 +134,7 @@ public class TvFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<TvRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -153,7 +153,7 @@ public class TvFragment extends Fragment {
         recyclerViewOnTheAir.setLayoutManager(layoutManager);
 
         String apiKey = zzApiKey.getApiKey();
-        final Call<TvRoot> resultCall = ApiClient.getMovieDbServices().getPopularTv(apiKey,"en-US",1);
+        final Call<TvRoot> resultCall = ApiClient.getMovieDbServices().getOnTheAirTv(apiKey,"en-US",1);
         resultCall.enqueue(new Callback<TvRoot>() {
             @Override
             public void onResponse(Call<TvRoot> call, Response<TvRoot> response) {
@@ -164,7 +164,7 @@ public class TvFragment extends Fragment {
 
             @Override
             public void onFailure(Call<TvRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -194,7 +194,7 @@ public class TvFragment extends Fragment {
 
             @Override
             public void onFailure(Call<TvRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }

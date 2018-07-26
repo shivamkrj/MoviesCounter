@@ -7,12 +7,13 @@
     android:layout_height="250dp"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-    android:layout_marginLeft="3dp"
-    android:layout_marginRight="3dp">
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <ImageView
             android:id="@+id/imageView"
@@ -32,6 +33,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:text="Jurassic World"
+            android:maxLines="2"
+            android:minLines="2"
+            android:ellipsize="end"
             android:textSize="14sp"
             android:padding="6dp"
             app:layout_constraintEnd_toEndOf="parent"

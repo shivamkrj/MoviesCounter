@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 
 /**
@@ -40,10 +38,10 @@ public class MoviesFragment extends Fragment {
     RecyclerView recyclerViewTopRated;
     RecyclerView recyclerViewPopular;
     RecyclerView recyclerViewNowShowing;
-    ArrayList<UpcomingResult> upcomingItems;
-    ArrayList<UpcomingResult> topRatedItems;
-    ArrayList<UpcomingResult> nowShowingItems;
-    ArrayList<UpcomingResult> popularItems;
+    ArrayList<MoviesResult> upcomingItems;
+    ArrayList<MoviesResult> topRatedItems;
+    ArrayList<MoviesResult> nowShowingItems;
+    ArrayList<MoviesResult> popularItems;
     AdapterRectangularView rectangularAdapter;
     AdapterSquareView squareAdapter;
     AdapterRectangularView nowShowingAdapter;
@@ -104,18 +102,18 @@ public class MoviesFragment extends Fragment {
         recyclerViewNowShowing.setLayoutManager(layoutManager);
 
         String apiKey = zzApiKey.getApiKey();
-        final Call<UpcomingRoot> resultCall = ApiClient.getMovieDbServices().getNowShowing(apiKey,"en-US",1);
-        resultCall.enqueue(new Callback<UpcomingRoot>() {
+        final Call<MoviesRoot> resultCall = ApiClient.getMovieDbServices().getNowShowing(apiKey,"en-US",1);
+        resultCall.enqueue(new Callback<MoviesRoot>() {
             @Override
-            public void onResponse(Call<UpcomingRoot> call, Response<UpcomingRoot> response) {
-                List<UpcomingResult> resultList = response.body().getResults();
+            public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
+                List<MoviesResult> resultList = response.body().getResults();
                 nowShowingItems.addAll(resultList);
                 nowShowingAdapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<UpcomingRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<MoviesRoot> call, Throwable t) {
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -134,18 +132,18 @@ public class MoviesFragment extends Fragment {
         recyclerViewPopular.setLayoutManager(layoutManager);
 
         String apiKey = zzApiKey.getApiKey();
-        final Call<UpcomingRoot> resultCall = ApiClient.getMovieDbServices().getPopularMovies(apiKey,"en-US",1);
-        resultCall.enqueue(new Callback<UpcomingRoot>() {
+        final Call<MoviesRoot> resultCall = ApiClient.getMovieDbServices().getPopularMovies(apiKey,"en-US",1);
+        resultCall.enqueue(new Callback<MoviesRoot>() {
             @Override
-            public void onResponse(Call<UpcomingRoot> call, Response<UpcomingRoot> response) {
-                List<UpcomingResult> resultList = response.body().getResults();
+            public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
+                List<MoviesResult> resultList = response.body().getResults();
 
                 popularItems.addAll(resultList);
                 popularAdapter.notifyDataSetChanged();
             }
             @Override
-            public void onFailure(Call<UpcomingRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<MoviesRoot> call, Throwable t) {
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -164,11 +162,11 @@ public class MoviesFragment extends Fragment {
         recyclerViewTopRated.setLayoutManager(layoutManager);
 
         String apiKey = zzApiKey.getApiKey();
-        final Call<UpcomingRoot> resultCall = ApiClient.getMovieDbServices().getTopRatedMovies(apiKey,"en-US",1);
-        resultCall.enqueue(new Callback<UpcomingRoot>() {
+        final Call<MoviesRoot> resultCall = ApiClient.getMovieDbServices().getTopRatedMovies(apiKey,"en-US",1);
+        resultCall.enqueue(new Callback<MoviesRoot>() {
             @Override
-            public void onResponse(Call<UpcomingRoot> call, Response<UpcomingRoot> response) {
-                List<UpcomingResult> resultList = response.body().getResults();
+            public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
+                List<MoviesResult> resultList = response.body().getResults();
                 String name = resultList.get(0).getTitle();
                 Log.d("onresponse",name+" topRated");
 
@@ -176,8 +174,8 @@ public class MoviesFragment extends Fragment {
                 squareAdapter.notifyDataSetChanged();
             }
             @Override
-            public void onFailure(Call<UpcomingRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<MoviesRoot> call, Throwable t) {
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -196,11 +194,11 @@ public class MoviesFragment extends Fragment {
         recyclerViewUpcoming.setLayoutManager(layoutManager);
 
         String apiKey = zzApiKey.getApiKey();
-        final Call<UpcomingRoot> resultCall = ApiClient.getMovieDbServices().getUpcomingMovies(apiKey,"en-US",1);
-        resultCall.enqueue(new Callback<UpcomingRoot>() {
+        final Call<MoviesRoot> resultCall = ApiClient.getMovieDbServices().getUpcomingMovies(apiKey,"en-US",1);
+        resultCall.enqueue(new Callback<MoviesRoot>() {
             @Override
-            public void onResponse(Call<UpcomingRoot> call, Response<UpcomingRoot> response) {
-                List<UpcomingResult> resultList = response.body().getResults();
+            public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
+                List<MoviesResult> resultList = response.body().getResults();
                 upcomingItems.addAll(resultList);
                 String name = resultList.get(0).getTitle();
                 Log.d("onresponse",name+" name");
@@ -208,8 +206,8 @@ public class MoviesFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<UpcomingRoot> call, Throwable t) {
-                Toast.makeText(getContext(),"Network Error",Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<MoviesRoot> call, Throwable t) {
+                Toast.makeText(getContext(),"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }

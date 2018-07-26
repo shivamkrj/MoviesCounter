@@ -2,10 +2,9 @@ package in.skr.shivamkumar.moviescounter;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Toast;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,13 +22,13 @@ import retrofit2.Response;
 
 public class ViewAllActivity extends AppCompatActivity {
 
-    ArrayList<UpcomingResult> items;
+    ArrayList<MoviesResult> items;
     AdapterSquareView adapter;
     RecyclerView recyclerView;
     int page =1;
     boolean isScrolled = false;
     int currentItem,totalItem,scrolledOutItem;
-    StaggeredGridLayoutManager layoutManager;
+    GridLayoutManager layoutManager;
    // LinearLayoutManager layoutManager;
 
     @Override
@@ -50,9 +48,8 @@ public class ViewAllActivity extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapter);
-        layoutManager = new StaggeredGridLayoutManager(3, LinearLayoutManager.VERTICAL);
+        layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
-//        layoutManager = new LinearLayoutManager(this);
         if(s.equals("popular")){
             openAllPopular();
         }
@@ -60,35 +57,32 @@ public class ViewAllActivity extends AppCompatActivity {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                isScrolled = true;
-                Log.d("play", "LOAD NEXT ITEM2");
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolled = true;
+                    Log.d("play", "LOAD NEXT ITEM2");
+                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Log.d("play","onScrolled "+page);
-                currentItem = recyclerView.getChildCount();
-                int[] firstVisibleItems = null;
-                firstVisibleItems = layoutManager.findFirstVisibleItemPositions(firstVisibleItems);
+
+                currentItem = layoutManager.getChildCount();
                 totalItem = layoutManager.getItemCount();
-                if (firstVisibleItems != null && firstVisibleItems.length > 0) {
-                    scrolledOutItem = firstVisibleItems[0];
+                scrolledOutItem = layoutManager.findFirstVisibleItemPosition();
+
+                if(isScrolled && (currentItem + scrolledOutItem)==totalItem){
+                    isScrolled = false;
+                    page++;
+                    openAllPopular();
+                    Log.d("play 2", "LOAD NEXT ITEM");
                 }
 
-                if (isScrolled) {
-                    if ((currentItem + scrolledOutItem) >= totalItem) {
-                        isScrolled = false;
-                        page++;
-                        openAllPopular();
-                        //  progressBar.setVisibility(View.VISIBLE);
-                        Log.d("play 2", "LOAD NEXT ITEM");
-                    }
-                }
+
             }
         });
     }
-
 
     private void fetchData() {
         new Handler().postDelayed(new Runnable() {
@@ -102,17 +96,17 @@ public class ViewAllActivity extends AppCompatActivity {
 
     private void openAllPopular() {
         String apiKey = zzApiKey.getApiKey();
-        final Call<UpcomingRoot> resultCall = ApiClient.getMovieDbServices().getPopularMovies(apiKey,"en-US",page);
-        resultCall.enqueue(new Callback<UpcomingRoot>() {
+        final Call<MoviesRoot> resultCall = ApiClient.getMovieDbServices().getPopularMovies(apiKey,"en-US",page);
+        resultCall.enqueue(new Callback<MoviesRoot>() {
             @Override
-            public void onResponse(Call<UpcomingRoot> call, Response<UpcomingRoot> response) {
-                List<UpcomingResult> resultList = response.body().getResults();
+            public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
+                List<MoviesResult> resultList = response.body().getResults();
                 items.addAll(resultList);
                 adapter.notifyDataSetChanged();
             }
             @Override
-            public void onFailure(Call<UpcomingRoot> call, Throwable t) {
-                Toast.makeText(ViewAllActivity.this,"Network Error",Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<MoviesRoot> call, Throwable t) {
+                Toast.makeText(ViewAllActivity.this,"TvDetailsRootNetwork Error",Toast.LENGTH_SHORT).show();
             }
         });
     }

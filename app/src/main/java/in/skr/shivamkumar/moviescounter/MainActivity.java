@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -40,7 +42,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //checking which fragment to open by default
+        //finding device resolution size
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        Log.d("dimension","h:"+height+" w:"+width);
         //else
         openFragment(MOVIE_TYPE);
 
@@ -69,7 +76,6 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             Intent intent = new Intent(this,ViewAllActivity.class);
             intent.putExtra("url","popular");
-
             startActivity(intent);
             return true;
         }
@@ -90,7 +96,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_tv) {
             openFragment(TV_TYPE);
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(this,DetailsScrollingActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
