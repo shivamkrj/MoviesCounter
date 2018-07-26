@@ -16,13 +16,22 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Airing Today"
                 android:textSize="20sp"
                 android:textColor="#0a37b3"
                 android:padding="6dp"
                 android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/airingToday2TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all"/>
 
         </LinearLayout>
 
@@ -31,14 +40,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="On The Air"
-            android:textSize="20sp"
-            android:textColor="#0a37b3"
-            android:padding="6dp"
-            android:layout_marginBottom="8dp"/>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="On The Air"
+               android:textSize="20sp"
+               android:textColor="#0a37b3"
+               android:padding="6dp"
+               android:layout_marginBottom="8dp"/>
+           <TextView
+               android:id="@+id/onTheAir2TextView"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:gravity="right"
+               android:padding="8dp"
+               android:textColor="#0a37b3"
+               android:onClick="seeAll"
+               android:text="@string/see_all"/>
+       </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewOnTheAir"
@@ -61,10 +84,15 @@
                 android:layout_marginBottom="8dp"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/popular22TextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/see_all"
-                android:visibility="gone"/>
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all"/>
+
 
         </LinearLayout>
 
@@ -76,17 +104,28 @@
             android:layout_height="300dp"/>
 
 
-
-
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Top Rated"
-            android:textSize="20sp"
-            android:textColor="#0a37b3"
-            android:padding="6dp"
-            android:layout_marginBottom="8dp"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top Rated"
+                android:textSize="20sp"
+                android:textColor="#0a37b3"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/topRated22TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all"/>
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewTopRatedTv"

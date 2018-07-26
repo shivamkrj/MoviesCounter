@@ -19,12 +19,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener, TvFragment.OnFragmentInteractionListener {
 
     private final int MOVIE_TYPE = 1;
     private final int TV_TYPE = 2;
+    MoviesFragment moviesFragment;
+    TvFragment tvFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //TODO on boarding screen
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -111,12 +117,12 @@ public class MainActivity extends AppCompatActivity
     public void openFragment(int type){
         FragmentManager fragmentManager = getSupportFragmentManager();
         if(type==MOVIE_TYPE){
-            MoviesFragment tvFragment =MoviesFragment.newInstance(null,null);
+            moviesFragment =MoviesFragment.newInstance(null,null);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.container,tvFragment);
+            fragmentTransaction.replace(R.id.container,moviesFragment);
             fragmentTransaction.commit();
         }else if(type==TV_TYPE){
-            TvFragment tvFragment =TvFragment.newInstance(null,null);
+            tvFragment =TvFragment.newInstance(null,null);
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container,tvFragment);
             fragmentTransaction.commit();
@@ -126,5 +132,27 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+    public void seeAll(View view){
+        int id = view.getId();
+        Intent intent = new Intent(this,ViewAllActivity.class);
+        if(id==R.id.popularTextView){
+            intent.putExtra("url","popular");
+        }else if(id==R.id.topRated2TextView){
+            intent.putExtra("url","topRated");
+        }else if(id==R.id.upcoming2TextView){
+            intent.putExtra("url","upcoming");
+        }else if(id==R.id.nowShowingTextView2){
+            intent.putExtra("url","nowShowing");
+        }else if(id==R.id.topRated22TextView){
+            intent.putExtra("url","tvTopRated");
+        }else if(id==R.id.airingToday2TextView){
+            intent.putExtra("url","airingToday");
+        }else if(id==R.id.onTheAir2TextView){
+            intent.putExtra("url","onTheAir");
+        }else if(id==R.id.popular22TextView){
+            intent.putExtra("url","tvPopular");
+        }
+        startActivity(intent);
     }
 }

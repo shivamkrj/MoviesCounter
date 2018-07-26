@@ -4,7 +4,7 @@ package in.skr.shivamkumar.moviescounter;
 import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
-public class MovieDetalsRoot {
+public class MovieDetailsRoot {
 
     @SerializedName("adult")
     private Boolean mAdult;

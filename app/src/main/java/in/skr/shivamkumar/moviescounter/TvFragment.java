@@ -1,6 +1,7 @@
 package in.skr.shivamkumar.moviescounter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -82,6 +83,16 @@ public class TvFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open tv Details
+                TvResult result = topRatedItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getName());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",false);
+                intent.putExtra("overview",result.getOverview());
+                startActivity(intent);
             }
         });
         recyclerViewTopRated = view.findViewById(R.id.recyclerViewTopRatedTv);
@@ -112,6 +123,16 @@ public class TvFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open tv Details
+                TvResult result = popularItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getName());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",false);
+                intent.putExtra("overview",result.getOverview());
+                startActivity(intent);
             }
         });
         recyclerViewPopular = view.findViewById(R.id.recyclerViewPopularTv);
@@ -145,6 +166,16 @@ public class TvFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open tv Details
+                TvResult result = onTheAirItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getName());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",false);
+                intent.putExtra("overview",result.getOverview());
+                startActivity(intent);
             }
         });
         recyclerViewOnTheAir = view.findViewById(R.id.recyclerViewOnTheAir);
@@ -175,6 +206,16 @@ public class TvFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open tv Details
+                TvResult result = airingTodayItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getName());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",false);
+                intent.putExtra("overview",result.getOverview());
+                startActivity(intent);
             }
         });
         recyclerViewAiringToday = view.findViewById(R.id.recyclerViewAiringToday);
@@ -221,6 +262,7 @@ public class TvFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+    public void seeAll(View view){}
 
     public interface OnFragmentInteractionListener {
 

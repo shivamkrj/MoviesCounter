@@ -13,12 +13,12 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Popular"
                 android:textSize="20sp"
@@ -27,10 +27,14 @@
                 android:layout_marginBottom="8dp"/>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/popularTextView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/see_all"
-                android:visibility="gone"/>
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all"/>
 
         </LinearLayout>
 
@@ -41,42 +45,94 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Now Showing"
-            android:textSize="20sp"
-            android:textColor="#0a37b3"
-            android:padding="6dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Now Showing"
+                android:textSize="20sp"
+                android:textColor="#0a37b3"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/nowShowingTextView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all" />
+
+        </LinearLayout>
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewNowShowing"
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upcoming"
-            android:textSize="20sp"
-            android:textColor="#0a37b3"
-            android:padding="6dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upcoming"
+                android:textSize="20sp"
+                android:textColor="#0a37b3"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/upcoming2TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all"/>
+
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewUpcoming"
             android:layout_width="match_parent"
             android:layout_height="300dp"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Top Rated"
-            android:textSize="20sp"
-            android:textColor="#0a37b3"
-            android:padding="6dp"
-            android:layout_marginBottom="8dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Top Rated"
+                android:textSize="20sp"
+                android:textColor="#0a37b3"
+                android:padding="6dp"
+                android:layout_marginBottom="8dp"/>
+            <TextView
+                android:id="@+id/topRated2TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="8dp"
+                android:textColor="#0a37b3"
+                android:onClick="seeAll"
+                android:text="@string/see_all"/>
+
+        </LinearLayout>
+
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewTopRated"

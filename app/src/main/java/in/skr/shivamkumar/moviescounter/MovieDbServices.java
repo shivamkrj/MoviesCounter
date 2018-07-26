@@ -32,9 +32,10 @@ public interface MovieDbServices {
     Call<TvRoot> getTopRatedTv(@Query("api_key") String apiKey,@Query("language") String language,@Query("page") int page);
 
     @GET("movie/{id}")
-    Call<TvRoot> getMovieDetails(@Path("id") long id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    Call<MovieDetailsRoot> getMovieDetails(@Path("id") long id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
-    @GET("tb/{id}")
-    Call<TvRoot> getTvDetails(@Path("id") long id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+    @GET("tv/{id}")
+    Call<TvDetailsRoot> getTvDetails(@Path("id") long id, @Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
+
 
 }

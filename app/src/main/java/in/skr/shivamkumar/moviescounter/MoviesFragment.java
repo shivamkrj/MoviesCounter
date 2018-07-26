@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -94,6 +95,15 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
+                MoviesResult result = nowShowingItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getTitle());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",true);
+                startActivity(intent);
             }
         });
         recyclerViewNowShowing = view.findViewById(R.id.recyclerViewNowShowing);
@@ -124,6 +134,15 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
+                MoviesResult result = popularItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getTitle());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",true);
+                startActivity(intent);
             }
         });
         recyclerViewPopular = view.findViewById(R.id.recyclerViewPopular);
@@ -137,7 +156,6 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
                 List<MoviesResult> resultList = response.body().getResults();
-
                 popularItems.addAll(resultList);
                 popularAdapter.notifyDataSetChanged();
             }
@@ -154,6 +172,15 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
+                MoviesResult result = topRatedItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getTitle());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",true);
+                startActivity(intent);
             }
         });
         recyclerViewTopRated = view.findViewById(R.id.recyclerViewTopRated);
@@ -186,6 +213,15 @@ public class MoviesFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //open movie Details
+                MoviesResult result = upcomingItems.get(position);
+
+                Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getTitle());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",true);
+                startActivity(intent);
             }
         });
         recyclerViewUpcoming = view.findViewById(R.id.recyclerViewUpcoming);
@@ -212,12 +248,6 @@ public class MoviesFragment extends Fragment {
         });
     }
 
-    public void seeAllPopular(View view){
-        Intent intent = new Intent(getContext(),ViewAllActivity.class);
-        intent.putExtra("url","popular");
-        startActivity(intent);
-    }
-
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -240,6 +270,7 @@ public class MoviesFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+    public void seeAll(View view){}
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
