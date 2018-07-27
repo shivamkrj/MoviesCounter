@@ -26,6 +26,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener, TvFragment.OnFragmentInteractionListener {
 
+
     private final int MOVIE_TYPE = 1;
     private final int TV_TYPE = 2;
     MoviesFragment moviesFragment;
@@ -54,9 +55,8 @@ public class MainActivity extends AppCompatActivity
         int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
         Log.d("dimension","h:"+height+" w:"+width);
-        //else
+        //sp
         openFragment(MOVIE_TYPE);
-
     }
 
     @Override

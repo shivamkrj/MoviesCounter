@@ -65,7 +65,6 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
             }
         });
 
-
     }
 
     @Override

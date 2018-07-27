@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".DetailsScrollingActivity">
+    tools:context=".CastDetailsActivity">
 
-    <!--android:layout_height="@dimen/app_bar_height"-->
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
@@ -35,37 +34,6 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/jurasic" />
 
-
-
-                <LinearLayout
-                    android:id="@+id/titleLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_gravity="bottom"
-                    android:background="#060606"
-                    android:orientation="vertical">
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:gravity="center"-->
-                        <!--android:text="Mission Impossible"-->
-                        <!--android:textColor="#ffff"-->
-                        <!--android:textSize="30sp" />-->
-                </LinearLayout>
-
-
-                <ImageView
-                    android:id="@+id/poster_image_detail"
-                    android:layout_width="116dp"
-                    android:layout_height="160dp"
-                    android:background="#ffff56"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginBottom="40dp"
-                    app:layout_anchor="@id/titleLayout"
-                    app:layout_anchorGravity="center_vertical" />
             </FrameLayout>
 
             <android.support.v7.widget.Toolbar
@@ -81,7 +49,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_details_activity" />
+    <include layout="@layout/content_cast_details" />
 
 
 

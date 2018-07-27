@@ -24,20 +24,27 @@ public class ViewAllActivity extends AppCompatActivity {
 
     ArrayList<MoviesResult> items;
     ArrayList<TvResult> tvItems;
+    ArrayList<CastRootCast> castItems;
     AdapterSquareView adapter;
+    AdapterCasts castsAdapter;
     RecyclerView recyclerView;
     int page =1;
     boolean isScrolled = false;
     int currentItem,totalItem,scrolledOutItem;
+    long similarId;
     GridLayoutManager layoutManager;
     private final int MOVIES_POPULAR = 1;
     private final int MOVIES_UPCOMING = 2;
     private final int MOVIES_NOWSHOWING = 3;
     private final int MOVIES_TOPRATED = 4;
+    private final int MOVIES_SIMILAR = 5;
     private final int TV_AIRINGTODAY = 6;
     private final int TV_ONTHEAIR = 7;
     private final int TV_POPULAR = 8;
     private final int TV_TOPRATED = 9;
+    private final int TV_SIMILAR = 10;
+    private final int CASTTV = 888;
+    private final int CASTMOVIE = 999;
     private int category;
 
     @Override
@@ -49,12 +56,7 @@ public class ViewAllActivity extends AppCompatActivity {
         Intent i = getIntent();
         String s = i.getStringExtra("url");
 
-        items = new ArrayList<>();
-        tvItems = new ArrayList<>();
 
-        recyclerView.setAdapter(adapter);
-        layoutManager = new GridLayoutManager(this, 3);
-        recyclerView.setLayoutManager(layoutManager);
         if(s.equals("popular")){
             category = MOVIES_POPULAR;
         }else if(s.equals("upcoming")){
@@ -71,23 +73,73 @@ public class ViewAllActivity extends AppCompatActivity {
             category = TV_AIRINGTODAY;
         }else if(s.equals("onTheAir")){
             category = TV_ONTHEAIR;
+        }else if(s.equals("similarMovie")){
+            category = MOVIES_SIMILAR;
+            similarId = i.getLongExtra("id",0);
+        }else if(s.equals("similarTv")){
+            category = TV_SIMILAR;
+            similarId = i.getLongExtra("id",0);
+        }else if(s.equals("castTv")){
+            category = CASTTV;
+            similarId = i.getLongExtra("id",0);
+        }else if(s.equals("castMovie")){
+            category = CASTMOVIE;
+            similarId = i.getLongExtra("id",0);
         }
-        if(category<5){
+
+        if(category == CASTMOVIE || category == CASTTV)
+        {
+            layoutManager = new GridLayoutManager(this, 2);
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,40,true));
+        }
+        else
+            layoutManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(layoutManager);
+
+        if(category<6){
+            items = new ArrayList<>();
             adapter = new AdapterSquareView(this,1,items,null, new ViewItemClickListener() {
                 @Override
                 public void onClick(View view, int position) {
                     //open movie Details
+                    MoviesResult result = items.get(position);
+
+                    Intent intent = new Intent(ViewAllActivity.this, DetailsScrollingActivity.class);
+                    intent.putExtra("posterPath", result.getPosterPath());
+                    intent.putExtra("backdropPath", result.getBackdropPath());
+                    intent.putExtra("title", result.getTitle());
+                    intent.putExtra("id", result.getId());
+                    intent.putExtra("isMovie", true);
+                    intent.putExtra("overview", result.getOverview());
+                    intent.putExtra("rating", result.getVoteAverage());
+                    startActivity(intent);
                 }
             });
+        }else if(category ==CASTTV||category==CASTMOVIE){
+            loadAllCast();
+            return;
         }else{
-            adapter = new AdapterSquareView(this,1,null,tvItems, new ViewItemClickListener() {
+
+            tvItems = new ArrayList<>();
+            adapter = new AdapterSquareView(this,2,null,tvItems, new ViewItemClickListener() {
                 @Override
                 public void onClick(View view, int position) {
-                    //open movie Details
+                    //open tv Details
+                    TvResult result = tvItems.get(position);
+
+                    Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                    intent.putExtra("posterPath",result.getPosterPath());
+                    intent.putExtra("backdropPath",result.getBackdropPath());
+                    intent.putExtra("title",result.getName());
+                    intent.putExtra("id",result.getId());
+                    intent.putExtra("isMovie",false);
+                    intent.putExtra("overview",result.getOverview());
+                    startActivity(intent);
                 }
             });
         }
 
+        recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -113,6 +165,37 @@ public class ViewAllActivity extends AppCompatActivity {
         });
         openAll();
     }
+
+    private void loadAllCast() {
+        castItems = new ArrayList<>();
+        castsAdapter = new AdapterCasts(ViewAllActivity.this, new ViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+
+            }
+        }, castItems);
+        recyclerView.setAdapter(castsAdapter);
+        Call<CastRoot> rootCall;
+        if(category==CASTMOVIE)
+            rootCall = ApiClient.getMovieDbServices().getMovieCast(similarId,zzApiKey.getApiKey(),"en-US",1);
+        else
+            rootCall = ApiClient.getMovieDbServices().getTvCast(similarId,zzApiKey.getApiKey(),"en-US",1);
+
+        rootCall.enqueue(new Callback<CastRoot>() {
+            @Override
+            public void onResponse(Call<CastRoot> call, Response<CastRoot> response) {
+                CastRoot root = response.body();
+                castItems.addAll(root.getCast());
+                castsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<CastRoot> call, Throwable t) {
+                Toast.makeText(ViewAllActivity.this,"No Network",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void fetchData() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -125,7 +208,7 @@ public class ViewAllActivity extends AppCompatActivity {
 
     private void openAll() {
         String apiKey = zzApiKey.getApiKey();
-        if (category < 5) {//for Movies
+        if (category < 6) {//for Movies
             Call<MoviesRoot> resultCall;
             if (category == MOVIES_POPULAR)
                 resultCall = ApiClient.getMovieDbServices().getPopularMovies(apiKey, "en-US", page);
@@ -133,6 +216,8 @@ public class ViewAllActivity extends AppCompatActivity {
                 resultCall = ApiClient.getMovieDbServices().getNowShowing(apiKey, "en-US", page);
             else if (category == MOVIES_TOPRATED)
                 resultCall = ApiClient.getMovieDbServices().getTopRatedMovies(apiKey, "en-US", page);
+            else if (category == MOVIES_SIMILAR)
+                resultCall = ApiClient.getMovieDbServices().getSimilarMovies(similarId,apiKey, "en-US", page);
             else
                 resultCall = ApiClient.getMovieDbServices().getUpcomingMovies(apiKey, "en-US", page);
 
@@ -157,6 +242,8 @@ public class ViewAllActivity extends AppCompatActivity {
                 resultCall= ApiClient.getMovieDbServices().getPopularTv(apiKey,"en-US",1);
             else if(category ==TV_TOPRATED)
                 resultCall= ApiClient.getMovieDbServices().getTopRatedTv(apiKey,"en-US",1);
+            else if(category ==TV_SIMILAR)
+                resultCall= ApiClient.getMovieDbServices().getSimilarTv(similarId,apiKey,"en-US",1);
             else
                 resultCall= ApiClient.getMovieDbServices().getOnTheAirTv(apiKey,"en-US",1);
             resultCall.enqueue(new Callback<TvRoot>() {
@@ -166,7 +253,6 @@ public class ViewAllActivity extends AppCompatActivity {
                     tvItems.addAll(resultList);
                     adapter.notifyDataSetChanged();
                 }
-
                 @Override
                 public void onFailure(Call<TvRoot> call, Throwable t) {
                     Toast.makeText(ViewAllActivity.this,"Network Error",Toast.LENGTH_SHORT).show();

@@ -30,7 +30,6 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
         this.type = type;
     }
 
-
     @NonNull
     @Override
     public ViewHolderRectangular onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {

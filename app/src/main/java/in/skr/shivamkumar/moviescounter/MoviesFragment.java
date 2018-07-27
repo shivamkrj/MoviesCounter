@@ -96,13 +96,14 @@ public class MoviesFragment extends Fragment {
             public void onClick(View view, int position) {
                 //open movie Details
                 MoviesResult result = nowShowingItems.get(position);
-
                 Intent intent = new Intent(getContext(),DetailsScrollingActivity.class);
                 intent.putExtra("posterPath",result.getPosterPath());
                 intent.putExtra("backdropPath",result.getBackdropPath());
                 intent.putExtra("title",result.getTitle());
                 intent.putExtra("id",result.getId());
                 intent.putExtra("isMovie",true);
+                intent.putExtra("overview",result.getOverview());
+                intent.putExtra("rating",result.getVoteAverage());
                 startActivity(intent);
             }
         });
@@ -142,6 +143,8 @@ public class MoviesFragment extends Fragment {
                 intent.putExtra("title",result.getTitle());
                 intent.putExtra("id",result.getId());
                 intent.putExtra("isMovie",true);
+                intent.putExtra("overview",result.getOverview());
+                intent.putExtra("rating",result.getVoteAverage());
                 startActivity(intent);
             }
         });
@@ -180,6 +183,8 @@ public class MoviesFragment extends Fragment {
                 intent.putExtra("title",result.getTitle());
                 intent.putExtra("id",result.getId());
                 intent.putExtra("isMovie",true);
+                intent.putExtra("overview",result.getOverview());
+                intent.putExtra("rating",result.getVoteAverage());
                 startActivity(intent);
             }
         });
@@ -221,6 +226,8 @@ public class MoviesFragment extends Fragment {
                 intent.putExtra("title",result.getTitle());
                 intent.putExtra("id",result.getId());
                 intent.putExtra("isMovie",true);
+                intent.putExtra("overview",result.getOverview());
+                intent.putExtra("rating",result.getVoteAverage());
                 startActivity(intent);
             }
         });

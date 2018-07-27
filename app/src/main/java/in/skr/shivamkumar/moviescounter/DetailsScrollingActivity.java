@@ -3,13 +3,20 @@ package in.skr.shivamkumar.moviescounter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,6 +26,13 @@ public class DetailsScrollingActivity extends Activity {
 
     long id;
     boolean isMovie;
+    RecyclerView castRecyclerView;
+    ArrayList<CastRootCast> castItems;
+    AdapterCasts adapterCasts;
+    RecyclerView similarRecyclerView;
+    ArrayList<TvResult> tvItems;
+    ArrayList<MoviesResult> movieItems;
+    AdapterRectangularView adapterSimilar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +44,7 @@ public class DetailsScrollingActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         id = intent.getLongExtra("id",-1);
         String posterPath ="https://image.tmdb.org/t/p/w500/"+ intent.getStringExtra("posterPath");
         String backdropPath ="https://image.tmdb.org/t/p/w500/"+ intent.getStringExtra("backdropPath");
@@ -51,6 +65,132 @@ public class DetailsScrollingActivity extends Activity {
         Picasso.get().load(backdropPath)
                 .fit()
                 .into(backdropImageView);
+
+        String overview = intent.getStringExtra("overview");
+        Double rating = intent.getDoubleExtra("rating",0);
+        TextView descriptionTextView = findViewById(R.id.description_detail);
+        descriptionTextView.setText(overview);
+        int x = overview.length();
+        descriptionTextView.setMaxLines(5);
+
+        TextView ratingsTextView = findViewById(R.id.ratingTextView_Detail);
+        ratingsTextView.setText(rating+"*");
+
+        castRecyclerView = findViewById(R.id.recyclerViewCasts);
+        castItems = new ArrayList<>();
+        adapterCasts = new AdapterCasts(DetailsScrollingActivity.this, new ViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //open cast detatils activity
+                Intent intent1 = new Intent(DetailsScrollingActivity.this,CastDetailsActivity.class);
+                CastRootCast item = castItems.get(position);
+                intent1.putExtra("id",item.getId());
+                intent1.putExtra("character",item.getCharacter());
+                intent1.putExtra("name",item.getName());
+                startActivity(intent1);
+            }
+        }, castItems);
+        castRecyclerView.setAdapter(adapterCasts);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(DetailsScrollingActivity.this, LinearLayoutManager.HORIZONTAL,false);
+        castRecyclerView.setLayoutManager(layoutManager);
+        similarRecyclerView = findViewById(R.id.recyclerViewSimilar);
+        if(isMovie)
+            loadSimilarMovie();
+        else
+            loadSimilarTv();
+    }
+
+    private void loadSimilarMovie(){
+        movieItems = new ArrayList<>();
+        adapterSimilar = new AdapterRectangularView(this, 1, movieItems, null, new ViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {//open movie details
+                MoviesResult result = movieItems.get(position);
+
+                Intent intent = new Intent(DetailsScrollingActivity.this, DetailsScrollingActivity.class);
+                intent.putExtra("posterPath", result.getPosterPath());
+                intent.putExtra("backdropPath", result.getBackdropPath());
+                intent.putExtra("title", result.getTitle());
+                intent.putExtra("id", result.getId());
+                intent.putExtra("isMovie", true);
+                intent.putExtra("overview", result.getOverview());
+                intent.putExtra("rating", result.getVoteAverage());
+                startActivity(intent);
+            }
+        });
+        similarRecyclerView = findViewById(R.id.recyclerViewSimilar);
+        similarRecyclerView.setAdapter(adapterSimilar);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        similarRecyclerView.setLayoutManager(layoutManager);
+
+        String apiKey = zzApiKey.getApiKey();
+        final Call<MoviesRoot> resultCall = ApiClient.getMovieDbServices().getSimilarMovies(id,apiKey,"en-US",1);
+        resultCall.enqueue(new Callback<MoviesRoot>() {
+            @Override
+            public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
+                List<MoviesResult> resultList = response.body().getResults();
+                if(resultList==null){
+                    return;
+                }
+                movieItems.addAll(resultList);
+                adapterSimilar.notifyDataSetChanged();
+                TextView t1 = findViewById(R.id.similarMoviesTitleTextView);
+                t1.setText("Similar Movies");
+                t1.setVisibility(View.VISIBLE);
+                t1 = findViewById(R.id.similarSeeAll);
+                t1.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onFailure(Call<MoviesRoot> call, Throwable t) {
+                Toast.makeText(DetailsScrollingActivity.this,"Network Error",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void loadSimilarTv(){
+        tvItems = new ArrayList<>();
+        adapterSimilar = new AdapterRectangularView(this,2,null,tvItems, new ViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //open tv Details
+                TvResult result = tvItems.get(position);
+
+                Intent intent = new Intent(DetailsScrollingActivity.this,DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getName());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",false);
+                intent.putExtra("overview",result.getOverview());
+                startActivity(intent);
+            }
+        });
+        similarRecyclerView = findViewById(R.id.recyclerViewSimilar);
+        similarRecyclerView.setAdapter(adapterSimilar);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        similarRecyclerView.setLayoutManager(layoutManager);
+
+        String apiKey = zzApiKey.getApiKey();
+        final Call<TvRoot> resultCall = ApiClient.getMovieDbServices().getSimilarTv(id,apiKey,"en-US",1);
+        resultCall.enqueue(new Callback<TvRoot>() {
+            @Override
+            public void onResponse(Call<TvRoot> call, Response<TvRoot> response) {
+                List<TvResult> resultList = response.body().getTvResults();
+                if(resultList==null){
+                    return;
+                }
+                tvItems.addAll(resultList);
+                adapterSimilar.notifyDataSetChanged();
+                TextView t1 = findViewById(R.id.similarMoviesTitleTextView);
+                t1.setText("Similar TV Shows");
+                t1.setVisibility(View.VISIBLE);
+                t1 = findViewById(R.id.similarSeeAll);
+                t1.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onFailure(Call<TvRoot> call, Throwable t) {
+                Toast.makeText(DetailsScrollingActivity.this,"Network Error",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void fetchTvData() {
@@ -59,10 +199,36 @@ public class DetailsScrollingActivity extends Activity {
             @Override
             public void onResponse(Call<TvDetailsRoot> call, Response<TvDetailsRoot> response) {
                 TvDetailsRoot root = response.body();
+                fetchCast();
             }
             @Override
             public void onFailure(Call<TvDetailsRoot> call, Throwable t) {
                 Toast.makeText(DetailsScrollingActivity.this,"No Network",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void fetchCast() {
+        Call<CastRoot> rootCall;
+        if(isMovie)
+            rootCall = ApiClient.getMovieDbServices().getMovieCast(id,zzApiKey.getApiKey(),"en-US",1);
+        else
+            rootCall = ApiClient.getMovieDbServices().getTvCast(id,zzApiKey.getApiKey(),"en-US",1);
+
+        rootCall.enqueue(new Callback<CastRoot>() {
+            @Override
+            public void onResponse(Call<CastRoot> call, Response<CastRoot> response) {
+                CastRoot root = response.body();
+                castItems.addAll(root.getCast());
+                adapterCasts.notifyDataSetChanged();
+                TextView textView = findViewById(R.id.similarCastTextView);
+                textView.setVisibility(View.VISIBLE);
+                textView = findViewById(R.id.castTitleTextView);
+            }
+
+            @Override
+            public void onFailure(Call<CastRoot> call, Throwable t) {
 
             }
         });
@@ -75,13 +241,13 @@ public class DetailsScrollingActivity extends Activity {
             public void onResponse(Call<MovieDetailsRoot> call, Response<MovieDetailsRoot> response) {
                 MovieDetailsRoot root = response.body();
                 fetchMovieBriefs(root.getImdbId());
+                fetchCast();
             }
             @Override
             public void onFailure(Call<MovieDetailsRoot> call, Throwable t) {
                 Toast.makeText(DetailsScrollingActivity.this,"No Network",Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     private void fetchMovieBriefs(String imdbId) {
@@ -99,5 +265,23 @@ public class DetailsScrollingActivity extends Activity {
                 Toast.makeText(DetailsScrollingActivity.this,"No Network",Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public void seeAll(View view){
+        Intent intent = new Intent(this,ViewAllActivity.class);
+        if(isMovie)
+            intent.putExtra("url","similarMovie");
+        else
+            intent.putExtra("url","similarTv");
+        intent.putExtra("id",id);
+        startActivity(intent);
+    }
+    public void seeAllCast(View view){
+        Intent intent = new Intent(this,ViewAllActivity.class);
+        if(isMovie)
+            intent.putExtra("url","castMovie");
+        else
+            intent.putExtra("url","castTv");
+        intent.putExtra("id",id);
+        startActivity(intent);
     }
 }
