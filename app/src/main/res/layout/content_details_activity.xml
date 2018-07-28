@@ -20,10 +20,35 @@
             android:text="5.5*"
             android:textSize="20sp"/>
         <TextView
+            android:text="Plot"
+            android:textSize="15sp"
+            android:textColor="#030f8c"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:id="@+id/description_detail"/>
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/description_detail"
+            android:maxLines="4"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/description_brief"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/readMoreDescriptionTextView"
+            android:textColor="#0a0885"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:text="Read More"
+            android:onClick="readMoreDescription"
+            android:paddingBottom="11dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 
         <LinearLayout
@@ -56,8 +81,8 @@
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
-            android:visibility="gone"
             android:id="@+id/recyclerViewCasts"
+            android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"/>
@@ -93,7 +118,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewSimilar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"/>
 
         <TextView
             android:layout_width="wrap_content"

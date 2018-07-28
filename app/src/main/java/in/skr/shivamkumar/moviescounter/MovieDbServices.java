@@ -61,5 +61,4 @@ public interface MovieDbServices {
     @GET("person/{id}")
     Call<PersonDetailsRoot> getPersonDetails (@Path("id") long id,@Query("api_key") String apiKey, @Query("language") String language, @Query("page") int page);
 
-
 }

@@ -1,13 +1,18 @@
 package in.skr.shivamkumar.moviescounter;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.design.widget.AppBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +38,8 @@ public class DetailsScrollingActivity extends Activity {
     ArrayList<TvResult> tvItems;
     ArrayList<MoviesResult> movieItems;
     AdapterRectangularView adapterSimilar;
+    TextView descriptionTextView;
+    TextView descriptionBriefTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +47,20 @@ public class DetailsScrollingActivity extends Activity {
         setContentView(R.layout.activity_details_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_details);
 
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+              //  getWindow().setFlags(0,0);
+             //   Toast.makeText(DetailsScrollingActivity.this,"offsetListener",Toast.LENGTH_SHORT).show();
+            }
+        });
+
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
+
         final Intent intent = getIntent();
         id = intent.getLongExtra("id",-1);
         String posterPath ="https://image.tmdb.org/t/p/w500/"+ intent.getStringExtra("posterPath");
@@ -51,6 +68,8 @@ public class DetailsScrollingActivity extends Activity {
         String title = intent.getStringExtra("title");
         isMovie = intent.getBooleanExtra("isMovie",false);
         toolbar.setTitle(title);
+        descriptionTextView = findViewById(R.id.description_detail);
+        descriptionBriefTextView=findViewById(R.id.description_brief);
         if(isMovie)
             fetchMovieData();
         else
@@ -58,8 +77,8 @@ public class DetailsScrollingActivity extends Activity {
 
         ImageView backdropImageView = findViewById(R.id.backdropImageView_Detail);
         ImageView posterImageView = findViewById(R.id.poster_image_detail);
+        //set gif placeholder
         Picasso.get().load(posterPath)
-                .placeholder(R.drawable.ic_launcher_background)
                 .fit()
                 .into(posterImageView);
         Picasso.get().load(backdropPath)
@@ -68,11 +87,7 @@ public class DetailsScrollingActivity extends Activity {
 
         String overview = intent.getStringExtra("overview");
         Double rating = intent.getDoubleExtra("rating",0);
-        TextView descriptionTextView = findViewById(R.id.description_detail);
         descriptionTextView.setText(overview);
-        int x = overview.length();
-        descriptionTextView.setMaxLines(5);
-
         TextView ratingsTextView = findViewById(R.id.ratingTextView_Detail);
         ratingsTextView.setText(rating+"*");
 
@@ -85,9 +100,10 @@ public class DetailsScrollingActivity extends Activity {
                 Intent intent1 = new Intent(DetailsScrollingActivity.this,CastDetailsActivity.class);
                 CastRootCast item = castItems.get(position);
                 intent1.putExtra("id",item.getId());
-                intent1.putExtra("character",item.getCharacter());
                 intent1.putExtra("name",item.getName());
+                intent1.putExtra("profilePath",item.getProfilePath());
                 startActivity(intent1);
+                Log.d("play","onClick ");
             }
         }, castItems);
         castRecyclerView.setAdapter(adapterCasts);
@@ -98,7 +114,9 @@ public class DetailsScrollingActivity extends Activity {
             loadSimilarMovie();
         else
             loadSimilarTv();
+
     }
+
 
     private void loadSimilarMovie(){
         movieItems = new ArrayList<>();
@@ -225,6 +243,7 @@ public class DetailsScrollingActivity extends Activity {
                 TextView textView = findViewById(R.id.similarCastTextView);
                 textView.setVisibility(View.VISIBLE);
                 textView = findViewById(R.id.castTitleTextView);
+                textView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -256,8 +275,17 @@ public class DetailsScrollingActivity extends Activity {
             @Override
             public void onResponse(Call<OmdbRoot> call, Response<OmdbRoot> response) {
                 OmdbRoot root = response.body();
-                String directorName = root.getDirector();
-                Log.d("director",directorName);
+                if(root==null)
+                    return;
+                //Release Date
+                String briefText;
+                String s = root.getReleased();
+                briefText = "<b>Release Date</b> : "+s+"<br>";
+                briefText = "<b>Genre</b> : "+root.getGenre();
+
+//                descriptionBriefTextView.setText(Html.fromHtml("<b>Release Date</b> : "+s));
+
+
             }
 
             @Override
@@ -283,5 +311,19 @@ public class DetailsScrollingActivity extends Activity {
             intent.putExtra("url","castTv");
         intent.putExtra("id",id);
         startActivity(intent);
+    }
+
+    public void readMoreDescription(View view) {
+        TextView textView = (TextView)view;
+        if(((TextView) view).getText().toString().equals("Collapse")){
+            descriptionTextView.setMaxLines(4);
+            descriptionTextView.setEllipsize(TextUtils.TruncateAt.END);
+            textView.setText("Read More");
+            return;
+        }
+        descriptionTextView.setMaxLines(Integer.MAX_VALUE);
+        textView.setText("Collapse");
+        if(isMovie)
+            descriptionBriefTextView.setVisibility(View.VISIBLE);
     }
 }

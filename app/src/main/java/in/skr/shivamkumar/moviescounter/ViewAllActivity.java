@@ -45,6 +45,8 @@ public class ViewAllActivity extends AppCompatActivity {
     private final int TV_SIMILAR = 10;
     private final int CASTTV = 888;
     private final int CASTMOVIE = 999;
+    private final int CASTMOVIELIST = 101;
+    private final int CASTTVLIST = 201;
     private int category;
 
     @Override
@@ -55,7 +57,6 @@ public class ViewAllActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         Intent i = getIntent();
         String s = i.getStringExtra("url");
-
 
         if(s.equals("popular")){
             category = MOVIES_POPULAR;
@@ -84,6 +85,12 @@ public class ViewAllActivity extends AppCompatActivity {
             similarId = i.getLongExtra("id",0);
         }else if(s.equals("castMovie")){
             category = CASTMOVIE;
+            similarId = i.getLongExtra("id",0);
+        }else if(s.equals("castMovieList")){
+            category = CASTMOVIELIST;
+            similarId = i.getLongExtra("id",0);
+        }else if(s.equals("castTvList")){
+            category = CASTTVLIST;
             similarId = i.getLongExtra("id",0);
         }
 
@@ -118,8 +125,11 @@ public class ViewAllActivity extends AppCompatActivity {
         }else if(category ==CASTTV||category==CASTMOVIE){
             loadAllCast();
             return;
+        }else if(category == CASTMOVIELIST){
+            loadAllCastMovieList();
+        }else if(category == CASTTVLIST){
+            loadAllCastTvList();
         }else{
-
             tvItems = new ArrayList<>();
             adapter = new AdapterSquareView(this,2,null,tvItems, new ViewItemClickListener() {
                 @Override
@@ -138,8 +148,9 @@ public class ViewAllActivity extends AppCompatActivity {
                 }
             });
         }
-
         recyclerView.setAdapter(adapter);
+        if(category == CASTMOVIELIST|| category ==CASTTVLIST)
+            return;
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -166,12 +177,107 @@ public class ViewAllActivity extends AppCompatActivity {
         openAll();
     }
 
+    private void loadAllCastTvList() {
+        tvItems = new ArrayList<>();
+        adapter = new AdapterSquareView(this, 2,null, tvItems, new ViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //open tv Details
+                TvResult result = tvItems.get(position);
+
+                Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getName());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",false);
+                intent.putExtra("overview",result.getOverview());
+                startActivity(intent);
+            }
+        });
+        Call<TvCreditsRoot> creditsRootCall = ApiClient.getMovieDbServices().getTvCredits(similarId,zzApiKey.getApiKey(),"en-US",1);
+        creditsRootCall.enqueue(new Callback<TvCreditsRoot>() {
+            @Override
+            public void onResponse(Call<TvCreditsRoot> call, Response<TvCreditsRoot> response) {
+                List<TvCreditsRootCast> list = response.body().getCast();
+                for(int i=0;i<list.size();i++){
+                    TvCreditsRootCast resultItem = list.get(i);
+                    TvResult item = new TvResult();
+                    item.setId(resultItem.getId());
+                    item.setBackdropPath(resultItem.getBackdropPath());
+                    item.setPosterPath(resultItem.getPosterPath());
+                    item.setOverview(resultItem.getOverview());
+                    item.setName(resultItem.getName());
+                    item.setVoteAverage(resultItem.getVoteAverage());
+                    item.setGenreIds(resultItem.getGenreIds());
+                    tvItems.add(item);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<TvCreditsRoot> call, Throwable t) {
+                Toast.makeText(ViewAllActivity.this,"No Network",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void loadAllCastMovieList() {
+        items = new ArrayList<>();
+        adapter = new AdapterSquareView(this, 1, items, null, new ViewItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                //open movie Details
+                MoviesResult result = items.get(position);
+                Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                intent.putExtra("posterPath",result.getPosterPath());
+                intent.putExtra("backdropPath",result.getBackdropPath());
+                intent.putExtra("title",result.getTitle());
+                intent.putExtra("id",result.getId());
+                intent.putExtra("isMovie",true);
+                intent.putExtra("overview",result.getOverview());
+                intent.putExtra("rating",result.getVoteAverage());
+                startActivity(intent);
+            }
+        });
+        Call<MovieCreditsRoot> creditsRootCall = ApiClient.getMovieDbServices().getMovieCredits(similarId,zzApiKey.getApiKey(),"en-US",1);
+        creditsRootCall.enqueue(new Callback<MovieCreditsRoot>() {
+            @Override
+            public void onResponse(Call<MovieCreditsRoot> call, Response<MovieCreditsRoot> response) {
+                List<MovieCreditsRootCast> list = response.body().getCast();
+                for(int i=0;i<list.size();i++){
+                    MovieCreditsRootCast resultItem = list.get(i);
+                    MoviesResult item = new MoviesResult();
+                    item.setId(resultItem.getId());
+                    item.setBackdropPath(resultItem.getBackdropPath());
+                    item.setPosterPath(resultItem.getPosterPath());
+                    item.setOverview(resultItem.getOverview());
+                    item.setTitle(resultItem.getTitle());
+                    item.setVoteAverage(resultItem.getVoteAverage());
+                    item.setGenreIds(resultItem.getGenreIds());
+                    items.add(item);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            @Override
+            public void onFailure(Call<MovieCreditsRoot> call, Throwable t) {
+                Toast.makeText(ViewAllActivity.this,"No Network",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
     private void loadAllCast() {
         castItems = new ArrayList<>();
         castsAdapter = new AdapterCasts(ViewAllActivity.this, new ViewItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-
+                //open cast detatils activity
+                Intent intent1 = new Intent(ViewAllActivity.this,CastDetailsActivity.class);
+                CastRootCast item = castItems.get(position);
+                intent1.putExtra("id",item.getId());
+                intent1.putExtra("name",item.getName());
+                intent1.putExtra("profilePath",item.getProfilePath());
+                startActivity(intent1);
             }
         }, castItems);
         recyclerView.setAdapter(castsAdapter);

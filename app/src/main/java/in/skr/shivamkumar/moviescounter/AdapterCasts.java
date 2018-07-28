@@ -34,7 +34,7 @@ public class AdapterCasts extends RecyclerView.Adapter<ViewHolderCast> {
         return new ViewHolderCast(view);    }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderCast viewHolderCast, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolderCast viewHolderCast, int position) {
         CastRootCast item = itemsCast.get(position);
         viewHolderCast.castNameTextView.setText(item.getName());
         viewHolderCast.castRoleTextView.setText(item.getCharacter());
@@ -46,6 +46,12 @@ public class AdapterCasts extends RecyclerView.Adapter<ViewHolderCast> {
                 .placeholder(R.drawable.images_loading)
                 .into(viewHolderCast.castImageView);
 
+        viewHolderCast.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(viewHolderCast.itemView,viewHolderCast.getAdapterPosition());
+            }
+        });
     }
 
     @Override
