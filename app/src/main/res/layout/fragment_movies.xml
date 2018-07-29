@@ -8,9 +8,11 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/moviesRootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#211f1f">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -18,6 +20,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/popularMoviesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Popular"
@@ -51,6 +54,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/nowshowingMovieTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Now Showing"
@@ -83,6 +87,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/upcomingMoviesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Upcoming"
@@ -113,6 +118,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/topRatedMoviesTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Top Rated"

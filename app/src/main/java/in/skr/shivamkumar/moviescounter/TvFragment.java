@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -68,7 +70,45 @@ public class TvFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_tv, container, false);
-
+        if(MainActivity.isBlackTheme){
+            LinearLayout rootLayout = view.findViewById(R.id.tvRootLayout);
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.darkBackground,null));
+            TextView textView = view.findViewById(R.id.airingTodayTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.airingToday2TextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.onTheAirTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.onTheAir2TextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.popularTvTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.popular22TextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.topRatedTvTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.topRated22TextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+        }else{
+            LinearLayout rootLayout = view.findViewById(R.id.tvRootLayout);
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.lightBackground,null));
+            TextView textView = view.findViewById(R.id.airingTodayTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.airingToday2TextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.onTheAirTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.onTheAir2TextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.popularTvTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.popular22TextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.topRatedTvTitleTextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.topRated22TextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+        }
         loadAiringToaday();
         loadPopular();
         loadOnTheAir();

@@ -53,7 +53,6 @@ public class CastDetailsActivity extends Activity {
             toolbar.setTitle("Cast");
         else
             toolbar.setTitle(name);
-
         biographyTextView = findViewById(R.id.biographyTextView);
         fetchPersonDetails();
         fetchMovieCast();

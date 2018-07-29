@@ -14,7 +14,7 @@ public class ViewHolderRectangular extends RecyclerView.ViewHolder {
     TextView movieNameTextView;
     TextView ratingTextView;
     TextView genreTextView;
-    CheckBox checkBox;
+    ImageView checkBox;
 
     public ViewHolderRectangular(@NonNull View itemView) {
         super(itemView);

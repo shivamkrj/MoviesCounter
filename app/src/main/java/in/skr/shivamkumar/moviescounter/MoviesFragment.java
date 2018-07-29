@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +83,46 @@ public class MoviesFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_movies, container, false);
 
         //calling loading upcoming movies
+        if(MainActivity.isBlackTheme){
+            LinearLayout rootLayout = view.findViewById(R.id.moviesRootLayout);
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.darkBackground,null));
+            TextView textView = view.findViewById(R.id.popularMoviesTitle);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.popularTextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.nowshowingMovieTitle);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.nowShowingTextView2);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.upcomingMoviesTitle);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.upcoming2TextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.topRatedMoviesTitle);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+            textView = view.findViewById(R.id.topRated2TextView);
+            textView.setTextColor(getResources().getColor(R.color.darkTitleColor,null));
+
+        }else{
+            LinearLayout rootLayout = view.findViewById(R.id.moviesRootLayout);
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.lightBackground,null));
+            TextView textView = view.findViewById(R.id.popularMoviesTitle);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.popularTextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.nowshowingMovieTitle);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.nowShowingTextView2);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.upcomingMoviesTitle);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.upcoming2TextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.topRatedMoviesTitle);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+            textView = view.findViewById(R.id.topRated2TextView);
+            textView.setTextColor(getResources().getColor(R.color.lightTitleColor,null));
+        }
         loadUpcomingMovies();
         loadTopRatedMovies();
         loadPopularMovies();

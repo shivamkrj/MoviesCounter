@@ -101,15 +101,14 @@ public class ViewAllActivity extends AppCompatActivity {
             category = CASTTVLIST;
             similarId = i.getLongExtra("id",0);
         }
-
-        if(!isSmallView){
-            layoutManager = new GridLayoutManager(this, 1);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1,10,true));
-        }
-        else if(category == CASTMOVIE || category == CASTTV)
+        if(category == CASTMOVIE || category == CASTTV)
         {
             layoutManager = new GridLayoutManager(this, 2);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,40,true));
+        }
+        else if(!isSmallView){
+            layoutManager = new GridLayoutManager(this, 1);
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1,10,true));
         }
         else
             layoutManager = new GridLayoutManager(this, 3);
@@ -154,7 +153,6 @@ public class ViewAllActivity extends AppCompatActivity {
                     }
                 });
             }
-
         }else if(category ==CASTTV||category==CASTMOVIE){
             loadAllCast();
             return;
@@ -205,7 +203,6 @@ public class ViewAllActivity extends AppCompatActivity {
             recyclerView.setAdapter(squrareAdapter);
         else
             recyclerView.setAdapter(rectangularAdapter);
-
         if(category == CASTMOVIELIST|| category ==CASTTVLIST)
             return;
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -477,6 +474,10 @@ public class ViewAllActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if(category == CASTMOVIE || category == CASTTV)
+        {
+            return false;
+        }
         getMenuInflater().inflate(R.menu.menu_view_all,menu);
         return true;
     }

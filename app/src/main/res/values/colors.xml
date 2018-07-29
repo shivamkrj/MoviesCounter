@@ -3,7 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="text_shadow">#373334</color>
+    <color name="text_shadow">#0e0d0d</color>
     <color name="colorPrimaryBlack">#0e0d0d</color>
     <color name="colorPrimaryDarkBlack">#080707</color>
+    <color name="darkTitleColor">#ffffff</color>
+    <color name="lightTitleColor">#0a37b3</color>
+    <color name="darkBackground">#211f1f</color>
+    <color name="lightBackground">#ffffff</color>
+
 </resources>

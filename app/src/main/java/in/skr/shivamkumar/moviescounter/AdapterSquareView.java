@@ -44,12 +44,16 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
             String imgUrl = "https://image.tmdb.org/t/p/w500" + item.getPosterPath();
             ImageView imageView = viewHolder.imageView;
             Picasso.get().load(imgUrl).fit().into(imageView);
+            Picasso.get().load(R.drawable.favorite_unselected_icon).into(viewHolder.checkBox);
+
         }else if(type==2){//Tv
             TvResult item = itemsTv.get(i);
             viewHolder.movieNameTextView.setText(item.getName());
             String imgUrl = "https://image.tmdb.org/t/p/w500" + item.getPosterPath();
             ImageView imageView = viewHolder.imageView;
             Picasso.get().load(imgUrl).fit().into(imageView);
+            Picasso.get().load(R.drawable.favorite_unselected_icon).into(viewHolder.checkBox);
+
         }
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +66,7 @@ public class AdapterSquareView extends RecyclerView.Adapter<ViewHolderSquare> {
             @Override
             public void onClick(View view) {
                 // Set Favorite
+                Picasso.get().load(R.drawable.favorite_selected_icon).into(viewHolder.checkBox);
             }
         });
 

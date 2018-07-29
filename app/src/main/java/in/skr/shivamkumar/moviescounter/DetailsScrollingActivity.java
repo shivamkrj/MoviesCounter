@@ -37,6 +37,7 @@ public class DetailsScrollingActivity extends Activity {
     AdapterCasts adapterCasts;
     RecyclerView similarRecyclerView;
     ArrayList<TvResult> tvItems;
+    ArrayList<VideosRootResult> videoItems;
     ArrayList<MoviesResult> movieItems;
     AdapterRectangularView adapterSimilar;
     TextView descriptionTextView;
@@ -47,14 +48,17 @@ public class DetailsScrollingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details_scrolling);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_details);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_details);
 
         AppBarLayout appBarLayout = findViewById(R.id.app_bar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-              //  getWindow().setFlags(0,0);
-             //   Toast.makeText(DetailsScrollingActivity.this,"offsetListener",Toast.LENGTH_SHORT).show();
+                if (verticalOffset>=-520){
+                    toolbar.setVisibility(View.GONE);
+                }else{
+                    toolbar.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -122,11 +126,34 @@ public class DetailsScrollingActivity extends Activity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(DetailsScrollingActivity.this, LinearLayoutManager.HORIZONTAL,false);
         castRecyclerView.setLayoutManager(layoutManager);
         similarRecyclerView = findViewById(R.id.recyclerViewSimilar);
+
+        loadVideos();
         if(isMovie)
             loadSimilarMovie();
         else
             loadSimilarTv();
+    }
 
+    private void loadVideos() {
+        videoItems = new ArrayList<>();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
+        similarRecyclerView.setLayoutManager(layoutManager);
+        //set Adapter
+
+        Call<VideosRoot> rootCall = ApiClient.getMovieDbServices().getMovieVideos(id,zzApiKey.getApiKey(),"en-US",1);
+        rootCall.enqueue(new Callback<VideosRoot>() {
+            @Override
+            public void onResponse(Call<VideosRoot> call, Response<VideosRoot> response) {
+                List<VideosRootResult> list = response.body().getResults();
+                videoItems.addAll(list);
+
+            }
+
+            @Override
+            public void onFailure(Call<VideosRoot> call, Throwable t) {
+
+            }
+        });
     }
 
 

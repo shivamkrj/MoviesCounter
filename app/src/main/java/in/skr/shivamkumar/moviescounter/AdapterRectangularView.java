@@ -46,23 +46,32 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
             viewHolder.ratingTextView.setText(item.getVoteAverage()+"");
             TextView genre =viewHolder.genreTextView;
             List<Long> genreList = item.getGenreIds();
-//
-//        for(int j =0 ; j < genreList.size();j++){
-//            genre.setText(" "+genreList.get(j)+", ");
-//        }
+            String s = "" + MainActivity.map.get(genreList.get(0));
+            for(int j = 1 ; j < genreList.size();j++){
+                s += ", " + MainActivity.map.get(genreList.get(j));
+            }
+            genre.setText(s);
             String imgUrl = "https://image.tmdb.org/t/p/w780"+item.getBackdropPath();
-            // Log.d("onresponse",item.getPosterPath()+" title");
             ImageView imageView = viewHolder.imageView;
             Picasso.get().load(imgUrl).resize(320,200).into(imageView);
+            Picasso.get().load(R.drawable.favorite_unselected_icon).into(viewHolder.checkBox);
+
         }else if(type==2){//Tv
             TvResult item = itemsTv.get(i);
             viewHolder.movieNameTextView.setText(item.getName());
             viewHolder.ratingTextView.setText(item.getVoteAverage()+"");
-            String imgUrl = "https://image.tmdb.org/t/p/w780"+item.getBackdropPath();
+            String imgUrl = "https://image.tmdb.org/t/p/w780" + item.getBackdropPath();
             ImageView imageView = viewHolder.imageView;
             Picasso.get().load(imgUrl).resize(320,200).into(imageView);
+            Picasso.get().load(R.drawable.favorite_unselected_icon).into(viewHolder.checkBox);
+            TextView genre =viewHolder.genreTextView;
+            List<Long> genreList = item.getGenreIds();
+            String s = "" + MainActivity.map.get(genreList.get(0));
+            for(int j = 1 ; j < genreList.size();j++){
+                s += ", " + MainActivity.map.get(genreList.get(j));
+            }
+            genre.setText(s);
         }
-
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +83,7 @@ public class AdapterRectangularView extends RecyclerView.Adapter<ViewHolderRecta
             @Override
             public void onClick(View view) {
                 // Set Favorite
+                Picasso.get().load(R.drawable.favorite_selected_icon).into(viewHolder.checkBox);
             }
         });
     }

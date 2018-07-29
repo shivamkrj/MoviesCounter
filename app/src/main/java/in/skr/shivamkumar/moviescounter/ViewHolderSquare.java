@@ -1,5 +1,6 @@
 package in.skr.shivamkumar.moviescounter;
 
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,7 +13,7 @@ public class ViewHolderSquare extends RecyclerView.ViewHolder {
     View itemView;
     ImageView imageView;
     TextView movieNameTextView;
-    CheckBox checkBox;
+    ImageView checkBox;
 
     public ViewHolderSquare(@NonNull View itemView) {
         super(itemView);
