@@ -1,6 +1,7 @@
 package in.skr.shivamkumar.moviescounter;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.Toast;
@@ -25,11 +28,14 @@ public class ViewAllActivity extends AppCompatActivity {
     ArrayList<MoviesResult> items;
     ArrayList<TvResult> tvItems;
     ArrayList<CastRootCast> castItems;
-    AdapterSquareView adapter;
+    AdapterSquareView squrareAdapter;
+    AdapterRectangularView rectangularAdapter;
     AdapterCasts castsAdapter;
     RecyclerView recyclerView;
+    SharedPreferences sharedPreferences;
     int page =1;
     boolean isScrolled = false;
+    boolean isSmallView;
     int currentItem,totalItem,scrolledOutItem;
     long similarId;
     GridLayoutManager layoutManager;
@@ -54,6 +60,8 @@ public class ViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
 
+        sharedPreferences=getSharedPreferences("my_shared_pref",MODE_PRIVATE);
+        isSmallView = sharedPreferences.getBoolean("ISSMALLVIEW",true);
         recyclerView = findViewById(R.id.recyclerView);
         Intent i = getIntent();
         String s = i.getStringExtra("url");
@@ -94,7 +102,11 @@ public class ViewAllActivity extends AppCompatActivity {
             similarId = i.getLongExtra("id",0);
         }
 
-        if(category == CASTMOVIE || category == CASTTV)
+        if(!isSmallView){
+            layoutManager = new GridLayoutManager(this, 1);
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1,10,true));
+        }
+        else if(category == CASTMOVIE || category == CASTTV)
         {
             layoutManager = new GridLayoutManager(this, 2);
             recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,40,true));
@@ -105,23 +117,44 @@ public class ViewAllActivity extends AppCompatActivity {
 
         if(category<6){
             items = new ArrayList<>();
-            adapter = new AdapterSquareView(this,1,items,null, new ViewItemClickListener() {
-                @Override
-                public void onClick(View view, int position) {
-                    //open movie Details
-                    MoviesResult result = items.get(position);
+            if(isSmallView){
+                squrareAdapter = new AdapterSquareView(this,1,items,null, new ViewItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        //open movie Details
+                        MoviesResult result = items.get(position);
 
-                    Intent intent = new Intent(ViewAllActivity.this, DetailsScrollingActivity.class);
-                    intent.putExtra("posterPath", result.getPosterPath());
-                    intent.putExtra("backdropPath", result.getBackdropPath());
-                    intent.putExtra("title", result.getTitle());
-                    intent.putExtra("id", result.getId());
-                    intent.putExtra("isMovie", true);
-                    intent.putExtra("overview", result.getOverview());
-                    intent.putExtra("rating", result.getVoteAverage());
-                    startActivity(intent);
-                }
-            });
+                        Intent intent = new Intent(ViewAllActivity.this, DetailsScrollingActivity.class);
+                        intent.putExtra("posterPath", result.getPosterPath());
+                        intent.putExtra("backdropPath", result.getBackdropPath());
+                        intent.putExtra("title", result.getTitle());
+                        intent.putExtra("id", result.getId());
+                        intent.putExtra("isMovie", true);
+                        intent.putExtra("overview", result.getOverview());
+                        intent.putExtra("rating", result.getVoteAverage());
+                        startActivity(intent);
+                    }
+                });
+            }else{
+                rectangularAdapter = new AdapterRectangularView(this, 1, items, null, new ViewItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        //open movie Details
+                        MoviesResult result = items.get(position);
+
+                        Intent intent = new Intent(ViewAllActivity.this, DetailsScrollingActivity.class);
+                        intent.putExtra("posterPath", result.getPosterPath());
+                        intent.putExtra("backdropPath", result.getBackdropPath());
+                        intent.putExtra("title", result.getTitle());
+                        intent.putExtra("id", result.getId());
+                        intent.putExtra("isMovie", true);
+                        intent.putExtra("overview", result.getOverview());
+                        intent.putExtra("rating", result.getVoteAverage());
+                        startActivity(intent);
+                    }
+                });
+            }
+
         }else if(category ==CASTTV||category==CASTMOVIE){
             loadAllCast();
             return;
@@ -131,24 +164,48 @@ public class ViewAllActivity extends AppCompatActivity {
             loadAllCastTvList();
         }else{
             tvItems = new ArrayList<>();
-            adapter = new AdapterSquareView(this,2,null,tvItems, new ViewItemClickListener() {
-                @Override
-                public void onClick(View view, int position) {
-                    //open tv Details
-                    TvResult result = tvItems.get(position);
+            if(isSmallView){
+                squrareAdapter = new AdapterSquareView(this,2,null,tvItems, new ViewItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        //open tv Details
+                        TvResult result = tvItems.get(position);
 
-                    Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
-                    intent.putExtra("posterPath",result.getPosterPath());
-                    intent.putExtra("backdropPath",result.getBackdropPath());
-                    intent.putExtra("title",result.getName());
-                    intent.putExtra("id",result.getId());
-                    intent.putExtra("isMovie",false);
-                    intent.putExtra("overview",result.getOverview());
-                    startActivity(intent);
-                }
-            });
+                        Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                        intent.putExtra("posterPath",result.getPosterPath());
+                        intent.putExtra("backdropPath",result.getBackdropPath());
+                        intent.putExtra("title",result.getName());
+                        intent.putExtra("id",result.getId());
+                        intent.putExtra("isMovie",false);
+                        intent.putExtra("overview",result.getOverview());
+                        startActivity(intent);
+                    }
+                });
+            }else{
+                rectangularAdapter = new AdapterRectangularView(this,2,null,tvItems, new ViewItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        //open tv Details
+                        TvResult result = tvItems.get(position);
+
+                        Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                        intent.putExtra("posterPath",result.getPosterPath());
+                        intent.putExtra("backdropPath",result.getBackdropPath());
+                        intent.putExtra("title",result.getName());
+                        intent.putExtra("id",result.getId());
+                        intent.putExtra("isMovie",false);
+                        intent.putExtra("overview",result.getOverview());
+                        startActivity(intent);
+                    }
+                });
+            }
+
         }
-        recyclerView.setAdapter(adapter);
+        if(isSmallView)
+            recyclerView.setAdapter(squrareAdapter);
+        else
+            recyclerView.setAdapter(rectangularAdapter);
+
         if(category == CASTMOVIELIST|| category ==CASTTVLIST)
             return;
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -179,22 +236,42 @@ public class ViewAllActivity extends AppCompatActivity {
 
     private void loadAllCastTvList() {
         tvItems = new ArrayList<>();
-        adapter = new AdapterSquareView(this, 2,null, tvItems, new ViewItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                //open tv Details
-                TvResult result = tvItems.get(position);
+        if(isSmallView){
+            squrareAdapter = new AdapterSquareView(this, 2,null, tvItems, new ViewItemClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    //open tv Details
+                    TvResult result = tvItems.get(position);
 
-                Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
-                intent.putExtra("posterPath",result.getPosterPath());
-                intent.putExtra("backdropPath",result.getBackdropPath());
-                intent.putExtra("title",result.getName());
-                intent.putExtra("id",result.getId());
-                intent.putExtra("isMovie",false);
-                intent.putExtra("overview",result.getOverview());
-                startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                    intent.putExtra("posterPath",result.getPosterPath());
+                    intent.putExtra("backdropPath",result.getBackdropPath());
+                    intent.putExtra("title",result.getName());
+                    intent.putExtra("id",result.getId());
+                    intent.putExtra("isMovie",false);
+                    intent.putExtra("overview",result.getOverview());
+                    startActivity(intent);
+                }
+            });
+        }else{
+            rectangularAdapter = new AdapterRectangularView(this, 2,null, tvItems, new ViewItemClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    //open tv Details
+                    TvResult result = tvItems.get(position);
+
+                    Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                    intent.putExtra("posterPath",result.getPosterPath());
+                    intent.putExtra("backdropPath",result.getBackdropPath());
+                    intent.putExtra("title",result.getName());
+                    intent.putExtra("id",result.getId());
+                    intent.putExtra("isMovie",false);
+                    intent.putExtra("overview",result.getOverview());
+                    startActivity(intent);
+                }
+            });
+        }
+
         Call<TvCreditsRoot> creditsRootCall = ApiClient.getMovieDbServices().getTvCredits(similarId,zzApiKey.getApiKey(),"en-US",1);
         creditsRootCall.enqueue(new Callback<TvCreditsRoot>() {
             @Override
@@ -211,7 +288,10 @@ public class ViewAllActivity extends AppCompatActivity {
                     item.setVoteAverage(resultItem.getVoteAverage());
                     item.setGenreIds(resultItem.getGenreIds());
                     tvItems.add(item);
-                    adapter.notifyDataSetChanged();
+                    if(isSmallView)
+                        squrareAdapter.notifyDataSetChanged();
+                    else
+                        rectangularAdapter.notifyDataSetChanged();
                 }
             }
             @Override
@@ -223,22 +303,42 @@ public class ViewAllActivity extends AppCompatActivity {
 
     private void loadAllCastMovieList() {
         items = new ArrayList<>();
-        adapter = new AdapterSquareView(this, 1, items, null, new ViewItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                //open movie Details
-                MoviesResult result = items.get(position);
-                Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
-                intent.putExtra("posterPath",result.getPosterPath());
-                intent.putExtra("backdropPath",result.getBackdropPath());
-                intent.putExtra("title",result.getTitle());
-                intent.putExtra("id",result.getId());
-                intent.putExtra("isMovie",true);
-                intent.putExtra("overview",result.getOverview());
-                intent.putExtra("rating",result.getVoteAverage());
-                startActivity(intent);
-            }
-        });
+        if(isSmallView){
+            squrareAdapter = new AdapterSquareView(this, 1, items, null, new ViewItemClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    //open movie Details
+                    MoviesResult result = items.get(position);
+                    Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                    intent.putExtra("posterPath",result.getPosterPath());
+                    intent.putExtra("backdropPath",result.getBackdropPath());
+                    intent.putExtra("title",result.getTitle());
+                    intent.putExtra("id",result.getId());
+                    intent.putExtra("isMovie",true);
+                    intent.putExtra("overview",result.getOverview());
+                    intent.putExtra("rating",result.getVoteAverage());
+                    startActivity(intent);
+                }
+            });
+        }else{
+            rectangularAdapter = new AdapterRectangularView(this, 1, items, null, new ViewItemClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    //open movie Details
+                    MoviesResult result = items.get(position);
+                    Intent intent = new Intent(ViewAllActivity.this,DetailsScrollingActivity.class);
+                    intent.putExtra("posterPath",result.getPosterPath());
+                    intent.putExtra("backdropPath",result.getBackdropPath());
+                    intent.putExtra("title",result.getTitle());
+                    intent.putExtra("id",result.getId());
+                    intent.putExtra("isMovie",true);
+                    intent.putExtra("overview",result.getOverview());
+                    intent.putExtra("rating",result.getVoteAverage());
+                    startActivity(intent);
+                }
+            });
+        }
+
         Call<MovieCreditsRoot> creditsRootCall = ApiClient.getMovieDbServices().getMovieCredits(similarId,zzApiKey.getApiKey(),"en-US",1);
         creditsRootCall.enqueue(new Callback<MovieCreditsRoot>() {
             @Override
@@ -255,13 +355,15 @@ public class ViewAllActivity extends AppCompatActivity {
                     item.setVoteAverage(resultItem.getVoteAverage());
                     item.setGenreIds(resultItem.getGenreIds());
                     items.add(item);
-                    adapter.notifyDataSetChanged();
+                    if(isSmallView)
+                        squrareAdapter.notifyDataSetChanged();
+                    else
+                        rectangularAdapter.notifyDataSetChanged();
                 }
             }
             @Override
             public void onFailure(Call<MovieCreditsRoot> call, Throwable t) {
                 Toast.makeText(ViewAllActivity.this,"No Network",Toast.LENGTH_SHORT).show();
-
             }
         });
     }
@@ -332,7 +434,10 @@ public class ViewAllActivity extends AppCompatActivity {
                 public void onResponse(Call<MoviesRoot> call, Response<MoviesRoot> response) {
                     List<MoviesResult> resultList = response.body().getResults();
                     items.addAll(resultList);
-                    adapter.notifyDataSetChanged();
+                    if(isSmallView)
+                        squrareAdapter.notifyDataSetChanged();
+                    else
+                        rectangularAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -357,7 +462,10 @@ public class ViewAllActivity extends AppCompatActivity {
                 public void onResponse(Call<TvRoot> call, Response<TvRoot> response) {
                     List<TvResult> resultList = response.body().getTvResults();
                     tvItems.addAll(resultList);
-                    adapter.notifyDataSetChanged();
+                    if(isSmallView)
+                        squrareAdapter.notifyDataSetChanged();
+                    else
+                        rectangularAdapter.notifyDataSetChanged();
                 }
                 @Override
                 public void onFailure(Call<TvRoot> call, Throwable t) {
@@ -365,6 +473,40 @@ public class ViewAllActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_view_all,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.smallViewMenu){
+            if(!isSmallView){
+                isSmallView = true;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("ISSMALLVIEW",true);
+                editor.apply();
+                startActivity(getIntent());
+                finish();
+            }
+            return true;
+        }else if(id == R.id.largeViewMenu){
+            if(isSmallView){
+                isSmallView = false;
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("ISSMALLVIEW",false);
+                editor.apply();
+                startActivity(getIntent());
+                finish();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

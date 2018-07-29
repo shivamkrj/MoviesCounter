@@ -3,7 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never" >
+
+        <menu>
+            <item
+                android:title="Theme">
+
+                <menu>
+                    <item
+                        android:id="@+id/black_theme"
+                        android:title="Dark Theme"/>
+                    <item
+                        android:id="@+id/white_theme"
+                        android:title="Light Theme"/>
+
+                </menu>
+            </item>
+
+            <item
+                android:title="Layout">
+
+                <menu>
+                    <item
+                        android:id="@+id/grid_layout"
+                        android:title="Grid Layout"/>
+                    <item
+                        android:id="@+id/linear_layout"
+                        android:title="Linear Layout"/>
+
+                </menu>
+            </item>
+        </menu>
+    </item>
 </menu>

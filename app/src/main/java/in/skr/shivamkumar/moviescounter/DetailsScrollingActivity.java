@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class DetailsScrollingActivity extends Activity {
     AdapterRectangularView adapterSimilar;
     TextView descriptionTextView;
     TextView descriptionBriefTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +80,22 @@ public class DetailsScrollingActivity extends Activity {
         ImageView backdropImageView = findViewById(R.id.backdropImageView_Detail);
         ImageView posterImageView = findViewById(R.id.poster_image_detail);
         //set gif placeholder
-        Picasso.get().load(posterPath)
-                .fit()
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.gif_loading)
                 .into(posterImageView);
-        Picasso.get().load(backdropPath)
-                .fit()
+
+        Glide.with(this)
+                .load(R.drawable.loading_gif2)
                 .into(backdropImageView);
+
+
+//        Picasso.get().load(posterPath)
+//                .fit()
+//                .into(posterImageView);
+//        Picasso.get().load(backdropPath)
+//                .fit()
+//                .into(backdropImageView);
 
         String overview = intent.getStringExtra("overview");
         Double rating = intent.getDoubleExtra("rating",0);
@@ -280,10 +292,18 @@ public class DetailsScrollingActivity extends Activity {
                 //Release Date
                 String briefText;
                 String s = root.getReleased();
-                briefText = "<b>Release Date</b> : "+s+"<br>";
-                briefText = "<b>Genre</b> : "+root.getGenre();
+                briefText = "<b>Release Date</b> : "+s+"\n";
+                briefText += "<b>Genre</b> : "+root.getGenre()+"\n";
+                briefText += "<b>Director</b> : "+root.getDirector()+"</br>";
+                briefText += "<b>Ratings</b> : "+root.getRatings()+"</br>";
+                for(OmdbRootRating r: root.getRatings()){
+                    briefText +="    "+"<b>"+r.getSource()+"</b>  "+r.getValue()+"</br>";
+                }
 
-//                descriptionBriefTextView.setText(Html.fromHtml("<b>Release Date</b> : "+s));
+
+
+
+                descriptionBriefTextView.setText(Html.fromHtml(briefText));
 
 
             }
@@ -318,6 +338,7 @@ public class DetailsScrollingActivity extends Activity {
         if(((TextView) view).getText().toString().equals("Collapse")){
             descriptionTextView.setMaxLines(4);
             descriptionTextView.setEllipsize(TextUtils.TruncateAt.END);
+            descriptionBriefTextView.setVisibility(View.GONE);
             textView.setText("Read More");
             return;
         }
