@@ -23,15 +23,13 @@
 
             <item
                 android:title="Layout">
-
                 <menu>
                     <item
                         android:id="@+id/grid_layout"
                         android:title="Grid Layout"/>
                     <item
                         android:id="@+id/linear_layout"
-                        android:title="Linear Layout"/>
-
+                        android:title="Tab Layout"/>
                 </menu>
             </item>
         </menu>

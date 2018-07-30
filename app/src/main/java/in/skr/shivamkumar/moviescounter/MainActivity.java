@@ -26,13 +26,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener, TvFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MoviesFragment.OnFragmentInteractionListener, TvFragment.OnFragmentInteractionListener,
+        MoviesFragmentNowShowing.OnFragmentInteractionListener, MoviesFragmentPopular.OnFragmentInteractionListener,MoviesFragmentTopRated.OnFragmentInteractionListener,
+        MoviesFragmentUpcoming.OnFragmentInteractionListener{
 
 
     private final int MOVIE_TYPE = 1;
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity
     public boolean isMovieFragment;
     FragmentStatePagerAdapter pagerAdapter;
     ViewPager viewPager;
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +60,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         //TODO on boarding screen
         //TODO  overflow of rectanglar text name (coming over rating's text))
-
+        //TODO youtube view
+        //TODO change favourite and star colour
+        //TODO extend theme in cast and adapters
+        //TODO complete room databast features with storing image of the favourite list
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -66,36 +73,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
         //tab layout
-//            pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-//                @Override
-//                public Fragment getItem(int position) {
-//                    if(position ==0){
-//                        openFragment(MOVIE_TYPE);
-//                        Toast.makeText(MainActivity.this,"pos 0" ,Toast.LENGTH_SHORT).show();
-//                        Log.d("position", position+" pos");
-//                        return null;
-//                    }
-//                    else
-//                        openFragment(TV_TYPE);
-//                    Toast.makeText(MainActivity.this,"pos 12" ,Toast.LENGTH_SHORT).show();
-//                    Log.d("position", position+" pos");
-//
-//                    return null ;
-//                }
-//
-//                @Override
-//                public int getCount() {
-//                    return 3;
-//                }
-//            };
-//            TabLayout tabLayout = findViewById(R.id.tabs);
-//            viewPager = findViewById(R.id.container);
-//            viewPager.setAdapter(pagerAdapter);
-//            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//            tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        tabLayout = findViewById(R.id.tabs);
+        viewPager = findViewById(R.id.containerViewPager);
+        openTabLayout();
 
 
         //tab layout
@@ -118,16 +99,85 @@ public class MainActivity extends AppCompatActivity
         Log.d("dimension","h:"+height+" w:"+width);
         //sp
         addGenre();
-        sharedPreferences=getSharedPreferences("my_shared_pref",MODE_PRIVATE);
-        isBlackTheme = sharedPreferences.getBoolean("ISBLACKTHEME",true);
-        isGridLayout = sharedPreferences.getBoolean("ISGRIDLAYOUT",true);
-        isMovieFragment = sharedPreferences.getBoolean("ISMOVIEFRAGMENT",true);
+        openP();
+//        openLinearLayout();
+    }
 
+    private void openLinearLayout() {
+        FrameLayout frameLayout = findViewById(R.id.container);
+        tabLayout.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        frameLayout.setVisibility(View.VISIBLE);
 
         if(isMovieFragment)
             openFragment(MOVIE_TYPE);
         else
             openFragment(TV_TYPE);
+    }
+
+    private void openP() {
+
+        sharedPreferences=getSharedPreferences("my_shared_pref",MODE_PRIVATE);
+        isBlackTheme = sharedPreferences.getBoolean("ISBLACKTHEME",true);
+        isGridLayout = sharedPreferences.getBoolean("ISGRIDLAYOUT",false);
+        isMovieFragment = sharedPreferences.getBoolean("ISMOVIEFRAGMENT",true);
+
+//        if(isGridLayout)
+//            openLinearLayout();
+//        else
+//            openTabLayout();
+    }
+
+    private void openTabLayout() {
+        FrameLayout frameLayout = findViewById(R.id.container);
+        frameLayout.setVisibility(View.GONE);
+
+        tabLayout.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        pagerAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                if(position ==0){
+                    //openFragment(MOVIE_TYPE);
+                    Toast.makeText(MainActivity.this,"pos 0" ,Toast.LENGTH_SHORT).show();
+                    Log.d("position", position+" pos");
+                    return new MoviesFragment();
+                }
+                else if(position == 1){
+                    //openFragment(TV_TYPE);
+//                    Toast.makeText(MainActivity.this,"pos 12" ,Toast.LENGTH_SHORT).show();
+//                    Log.d("position", position+" pos");
+//                    return new TvFragment() ;
+                    return new MoviesFragmentPopular();
+                }
+                return null;
+            }
+
+            @Override
+            public int getCount() {
+                return 2;
+            }
+        };
+
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void addGenre() {
@@ -216,6 +266,8 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("ISGRIDLAYOUT",true);
                 editor.apply();
+                startActivity(getIntent());
+                finish();
             }
 
             return true;
@@ -229,6 +281,8 @@ public class MainActivity extends AppCompatActivity
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("ISGRIDLAYOUT",false);
                 editor.apply();
+                startActivity(getIntent());
+                finish();
             }
 
             return true;
@@ -245,9 +299,23 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_movies) {
-            openFragment(MOVIE_TYPE);
+            if(!isMovieFragment){
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("ISMOVIEFRAGMENT",true);
+                editor.apply();
+                isMovieFragment = true;
+                startActivity(getIntent());
+                finish();
+            }
         } else if (id == R.id.nav_tv) {
-            openFragment(TV_TYPE);
+            if(isMovieFragment){
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("ISMOVIEFRAGMENT",true);
+                editor.apply();
+                isMovieFragment = false;
+                startActivity(getIntent());
+                finish();
+            }
         } else if (id == R.id.nav_manage) {
             Intent intent = new Intent(this,DetailsScrollingActivity.class);
             startActivity(intent);
@@ -309,56 +377,4 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-}
-
-class FragmentAdapter extends FragmentPagerAdapter {
-
-    MoviesFragment moviesFragment = MoviesFragment.newInstance(null,null);
-    TvFragment tvFragment = TvFragment.newInstance(null,null);
-
-    public FragmentAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    @Override
-    public Fragment getItem(int position) {
-
-        switch (position){
-            case 0:
-                if(tvFragment.view!=null)
-                tvFragment.view.setVisibility(View.GONE);
-                if(moviesFragment.view!=null)
-                moviesFragment.view.setVisibility(View.VISIBLE);
-
-                return moviesFragment;
-            case 1:
-                if(moviesFragment.view!=null)
-                moviesFragment.view.setVisibility(View.GONE);
-                if(tvFragment.view!=null)
-                    tvFragment.view.setVisibility(View.VISIBLE);
-                return tvFragment;
-            case 2:
-                return moviesFragment;
-        }
-        return null;
-    }
-
-    @Override
-    public int getCount() {
-        return 3;
-    }
-
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position){
-            //
-            //Your tab titles
-            //
-            case 0:return "Profile";
-            case 1:return "Search";
-            case 2: return "Contacts";
-            default:return null;
-        }
-    }
 }

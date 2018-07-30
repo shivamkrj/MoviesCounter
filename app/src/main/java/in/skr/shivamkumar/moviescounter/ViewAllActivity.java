@@ -2,7 +2,9 @@ package in.skr.shivamkumar.moviescounter;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -68,39 +70,55 @@ public class ViewAllActivity extends AppCompatActivity {
 
         if(s.equals("popular")){
             category = MOVIES_POPULAR;
+            setTitle("Popular Movies");
         }else if(s.equals("upcoming")){
             category = MOVIES_UPCOMING;
+            setTitle("Upcoming Movies");
         }else if(s.equals("topRated")){
             category = MOVIES_TOPRATED;
+            setTitle("Top Rated Movies");
         }else if(s.equals("nowShowing")){
             category = MOVIES_NOWSHOWING;
+            setTitle("Now Showing Movies");
         }else if(s.equals("tvTopRated")){
             category = TV_TOPRATED;
+            setTitle("Top Rated TV Series");
         }else if(s.equals("tvPopular")){
             category = TV_POPULAR;
+            setTitle("Popular TV Series");
         }else if(s.equals("airingToday")){
             category = TV_AIRINGTODAY;
+            setTitle("Airing Today");
         }else if(s.equals("onTheAir")){
             category = TV_ONTHEAIR;
         }else if(s.equals("similarMovie")){
+            setTitle("Similar Movies");
             category = MOVIES_SIMILAR;
             similarId = i.getLongExtra("id",0);
         }else if(s.equals("similarTv")){
+            setTitle("Similar TV Series");
             category = TV_SIMILAR;
             similarId = i.getLongExtra("id",0);
         }else if(s.equals("castTv")){
+            setTitle("All Casts");
             category = CASTTV;
             similarId = i.getLongExtra("id",0);
         }else if(s.equals("castMovie")){
+            setTitle("All Casts");
             category = CASTMOVIE;
             similarId = i.getLongExtra("id",0);
         }else if(s.equals("castMovieList")){
+            setTitle("See All Movies");
             category = CASTMOVIELIST;
             similarId = i.getLongExtra("id",0);
         }else if(s.equals("castTvList")){
+            setTitle("See All TV Series");
             category = CASTTVLIST;
             similarId = i.getLongExtra("id",0);
         }
+
+        changeTheme();
+
         if(category == CASTMOVIE || category == CASTTV)
         {
             layoutManager = new GridLayoutManager(this, 2);
@@ -108,7 +126,7 @@ public class ViewAllActivity extends AppCompatActivity {
         }
         else if(!isSmallView){
             layoutManager = new GridLayoutManager(this, 1);
-            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1,10,true));
+            recyclerView.addItemDecoration(new GridSpacingItemDecoration(1,25,true));
         }
         else
             layoutManager = new GridLayoutManager(this, 3);
@@ -229,6 +247,18 @@ public class ViewAllActivity extends AppCompatActivity {
             }
         });
         openAll();
+    }
+
+    private void changeTheme() {
+        if(MainActivity.isBlackTheme){
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
+                    .getColor(R.color.darkToolbarPrimary,null)));
+            ConstraintLayout rootLayout = findViewById(R.id.viewAllRootLayout);
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.darkBackground,null));
+        }else{
+            ConstraintLayout rootLayout = findViewById(R.id.viewAllRootLayout);
+            rootLayout.setBackgroundColor(getResources().getColor(R.color.lightBackground,null));
+        }
     }
 
     private void loadAllCastTvList() {

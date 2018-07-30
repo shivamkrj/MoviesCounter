@@ -10,5 +10,8 @@
     <color name="lightTitleColor">#0a37b3</color>
     <color name="darkBackground">#211f1f</color>
     <color name="lightBackground">#ffffff</color>
+    <color name="darkToolbarPrimaryDark">#0a0a0a</color>
+    <color name="darkToolbarPrimary">#141414</color>
+    <color name="darkToolbarPBc">#292828</color>
 
 </resources>
